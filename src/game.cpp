@@ -2,13 +2,19 @@
 #include <thread>
 
 #include "Game.h"
-#include "util.h"
+#include "rand.h"
 
 struct Gamemap {
 public:
 	static const int width = 20;
 	static const int height = 40;
 	char boardArray[width][height]{};
+};
+
+struct Node {
+public:
+	int pos_x{ 0 };
+	int pos_y{ 0 };
 };
 
 Gamemap* map = new Gamemap;
@@ -18,17 +24,28 @@ void Game::init() {
 	for (int x = 0; x < map->width; x++) {
 		for (int y = 0; y < map->height; y++) {
 			map->boardArray[x][y] = '.';
+
+			// TODO: other sides
+			// draw upper line
+			for (int x = 0; x < map->width / 20; x++) {
+				map->boardArray[x][y] = '_';
+			}
+			// draw left line
+			for (int y = 0; y < map->height / 40; y++) {
+				map->boardArray[x][y] = '|';
+			}
 		}
 	}
 
 	// draw apple
+	// TODO: dont let apple spawn on characters like '_' '|' for the collision box, nor for the positions of snake
 	map->boardArray[randGen(map->width)][randGen(map->height)] = 'O';
 }
 
 void Game::update() {
 	while (true)
 	{
-		// render screen
+		// double buffering: reference in book
 		std::string buffer;
 
 		// limiting framerate
@@ -36,6 +53,7 @@ void Game::update() {
 
 		// resets cursor to top left of the console window
 		std::cout << "\x1b[H" << std::flush;
+
 		// update game map
 		for (int x = 0; x < map->width; x++) {
 			buffer += '\n';

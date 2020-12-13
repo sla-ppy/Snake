@@ -23,10 +23,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\util.h">
+    <ClInclude Include="src\game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game.h">
+    <ClInclude Include="src\rand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

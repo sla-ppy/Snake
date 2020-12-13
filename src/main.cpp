@@ -2,12 +2,6 @@
 
 #include "game.h"
 
-struct Node {
-public:
-	int pos_x { 0 };
-	int pos_y { 0 };
-};
-
 int main() {
 	Game* game = new Game;
 

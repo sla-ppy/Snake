@@ -1,5 +1,5 @@
-#ifndef UTIL_H
-#define UTIL_H
+#ifndef RAND_H
+#define RAND_H
 
 #include <random>
 
@@ -14,9 +14,4 @@ int randGen(int max)
 	return randResult;
 }
 
-void clearScreen()
-{
-	system("cls");
-}
-
-#endif // UTIL_H
+#endif // RAND_H
