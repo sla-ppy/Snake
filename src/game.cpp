@@ -24,7 +24,6 @@ void Game::init() {
 	for (int x = 0; x < map->width; x++) {
 		for (int y = 0; y < map->height; y++) {
 			map->boardArray[x][y] = '.';
-
 			// TODO: other sides
 			// draw upper line
 			for (int x = 0; x < map->width / 20; x++) {
@@ -34,12 +33,30 @@ void Game::init() {
 			for (int y = 0; y < map->height / 40; y++) {
 				map->boardArray[x][y] = '|';
 			}
+			// top left corner
+			for (int x = 0; x < map->width / 20; x++) {
+				for (int y = 0; y < map->height / 40; y++) {
+					map->boardArray[x][y] = ' ';
+				}
+			}
 		}
 	}
 
 	// draw apple
-	// TODO: dont let apple spawn on characters like '_' '|' for the collision box, nor for the positions of snake
-	map->boardArray[randGen(map->width)][randGen(map->height)] = 'O';
+	bool findingApplePos = true;
+
+	while (findingApplePos) {
+
+		int widthValue = randGen(map->width);
+		int heightValue = randGen(map->height);
+
+		char apple = map->boardArray[widthValue][heightValue];
+
+		if (apple != '_' && apple != '|' && apple != ' ' && apple != '#' && apple != 'X') {
+			map->boardArray[widthValue][heightValue] = 'O';
+			findingApplePos = false;
+		}
+	}
 }
 
 void Game::update() {
