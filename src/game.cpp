@@ -1,9 +1,7 @@
 #include <iostream>
 #include <thread>
 
-#include <Windows.h>
-
-#include "Game.h"
+#include "game.h"
 #include "rand.h"
 
 struct Gamemap {
