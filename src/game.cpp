@@ -1,3 +1,5 @@
+// NOTE: game.cpp encoding was set to
+
 #include <iostream>
 #include <thread>
 
@@ -6,10 +8,11 @@
 
 struct Gamemap {
 public:
-	static const int width = 3; //20;
-	static const int height = 3; //40;
-	// unsigned char so we are able to access the extended ASCII table and have cute "graphics"
-	unsigned char boardArray[width][height]{};
+	static const int width = 20; //3;
+	static const int height = 40; //3;
+	// wchar_t - maybe for the UNICODE characters
+	// char
+	wchar_t boardArray[width][height]{};
 };
 
 struct Node {
@@ -28,39 +31,39 @@ void Game::init() {
 			// BOX:
 			// top side
 			if (x < map->width / map->width) {
-				map->boardArray[x][y] = 205;
+				map->boardArray[x][y] = L'\u2550';
 			}
 			// bottom side
 			if (x == map->width -1 )
 			{
-				map->boardArray[x][y] = 205;
+				map->boardArray[x][y] = L'\u2550';
 			}
 			// left side
 			if (y < map->height / map->height) {
-				map->boardArray[x][y] = 186;
+				map->boardArray[x][y] = L'\u2551';
 			}
 			// right side
 			if (y == map->height - 1)
 			{
-				map->boardArray[x][y] = 186;
+				map->boardArray[x][y] = L'\u2551';
 			}
 
 			// CORNERS:
 			// top-left
 			if (x < map->width / map->width && y < map->height / map->height) {
-				map->boardArray[x][y] = 201;
+				map->boardArray[x][y] = L'\u2554';
 			}
 			// top-right
 			if (x < map->width / map->width && y == map->height - 1) {
-				map->boardArray[x][y] = 187;
+				map->boardArray[x][y] = L'\u2557';
 			}
 			// bottom-left
 			if (x == map->width - 1 && y < map->height / map->height) {
-				map->boardArray[x][y] = 200;
+				map->boardArray[x][y] = L'\u255A';
 			}
 			// bottom-right
 			if (x == map->width - 1 && y == map->height - 1) {
-				map->boardArray[x][y] = 188;
+				map->boardArray[x][y] = L'\u255D';
 			}
 
 
@@ -77,26 +80,24 @@ void Game::init() {
 
 	while (findingApplePos) {
 
-		int widthValue = randGen(map->width);
-		int heightValue = randGen(map->height);
+		int width = randGen(map->width);
+		int height = randGen(map->height);
 
-		char apple = map->boardArray[widthValue][heightValue];
+		// char
+		wchar_t apple = map->boardArray[width][height];
 
-		if (apple == '.') {
-			apple = map->boardArray[widthValue][heightValue];
-		}
-
+		// ALT + SHIFT does stuff, interesting stuffffff!!! dont forget lol
 
 		// FIXME: collision is now all whacky because of the extended ASCII table values, unsure why this isn't working!
-		if (apple != 'X' // this is a clear example that ascii number table wont be a solution here, because instead of 'XYZ' number, the ASCII character is recorded as something else like 'Í' in this case!
-			&& apple != 186  //'º'
-			&& apple != 205  //'È'
-			&& apple != 201  //'¼'
-			&& apple != 200  //'»'
-			&& apple != 187  //'É'
-			&& apple != 188  //'X'
+		if (apple != 'X' // this is a clear example that ascii number table wont be a solution here, because instead of 'XYZ' number, the ASCII character is recorded as something else like 'Ã' in this case!
+			&& apple != L'\u2550' //186  //'ÅŸ'
+			&& apple != L'\u2551' //205  //'ÄŒ'	
+			&& apple != L'\u2554' //201  //'Ä½'
+			&& apple != L'\u2557' //200  //'Â»'
+			&& apple != L'\u255A' //187  //'Ã‰'
+			&& apple != L'\u255D' //188  //'X'
 			) {
-			map->boardArray[widthValue][heightValue] = 'O';
+			map->boardArray[width][height] = 'O';
 			findingApplePos = false;
 		}
 	}
@@ -106,7 +107,8 @@ void Game::update() {
 	while (true)
 	{
 		// double buffering: reference in book
-		std::string buffer;
+		// std::string - changed this to adopt the unicode
+		std::wstring buffer;
 
 		// limiting framerate
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -121,7 +123,8 @@ void Game::update() {
 				buffer += map->boardArray[x][y];
 			}
 		}
-		std::cout << buffer;
+		// std::cout - changed this to adopt the unicode
+		std::wcout << buffer;
 	}
 }
 
