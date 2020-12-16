@@ -1,10 +1,19 @@
-// NOTE: game.cpp encoding was set to
+// NOTE: game.cpp encoding was set to UTF-8
 
 #include <iostream>
 #include <thread>
+#include <Windows.h> // for keystrokes
+#include <conio.h> // getch()
 
 #include "game.h"
 #include "rand.h"
+
+#define WM_CHAR 0x0102
+#define WM_KEYDOWN 0x0100
+#define VK_UP 0x26
+#define VK_DOWN 0x28
+#define VK_LEFT 0x25
+#define VK_RIGHT 0x27
 
 struct Gamemap {
 public:
@@ -15,26 +24,32 @@ public:
 	wchar_t boardArray[width][height]{};
 };
 
-struct Node {
+struct SnakeNode {
 public:
 	int pos_x{ 0 };
 	int pos_y{ 0 };
 };
 
+struct SnakeHead : SnakeNode {
+
+};
+
 Gamemap* map = new Gamemap;
+SnakeHead* sHead = new SnakeHead;
 
 void Game::init() {
 	// draw game map
 	for (int x = 0; x < map->width; x++) {
 		for (int y = 0; y < map->height; y++) {
-			map->boardArray[x][y] = '.';			
+			map->boardArray[x][y] = '.';
+
 			// BOX:
 			// top side
 			if (x < map->width / map->width) {
 				map->boardArray[x][y] = L'\u2550';
 			}
 			// bottom side
-			if (x == map->width -1 )
+			if (x == map->width - 1)
 			{
 				map->boardArray[x][y] = L'\u2550';
 			}
@@ -66,12 +81,12 @@ void Game::init() {
 				map->boardArray[x][y] = L'\u255D';
 			}
 
-
 			// SNAKE:
-			// snake head spawn
-			if (x == map->width / 2 && y == map->height / 2) {
-				map->boardArray[x][y] = 'X';
-			}
+			// head
+			sHead->pos_x = map->width / 2;
+			sHead->pos_y = map->height / 2;
+			// render sHead
+			map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 		}
 	}
 
@@ -111,20 +126,51 @@ void Game::update() {
 		std::wstring buffer;
 
 		// limiting framerate
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		// was 100ms - but i changed it to 1000ms after i switched from ASCII to UNICODE
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 		// resets cursor to top left of the console window
-		std::cout << "\x1b[H" << std::flush;
+		// FIXME: cursor keeps blinking randomly throughout the gamemap
+		std::wcout << "\x1b[H" << std::flush;
 
-		// update game map
-		for (int x = 0; x < map->width; x++) {
-			buffer += '\n';
-			for (int y = 0; y < map->height; y++) {
-				buffer += map->boardArray[x][y];
-			}
-		}
-		// std::cout - changed this to adopt the unicode
-		std::wcout << buffer;
+		bool isMoving = false;
+
+		// TODO: continue from here
+		  case WM_KEYDOWN:
+			  switch (wParam)
+			  {
+			  case VK_LEFT:
+				  // Process the LEFT ARROW key.
+				  break;
+			  case VK_RIGHT:
+				  // Process the RIGHT ARROW key. 
+				  break;
+			  case VK_UP:
+				  // Process the UP ARROW key. 
+				  break;
+			  case VK_DOWN:
+				  // Process the DOWN ARROW key. 
+				  break;
+			  default:
+				  break;
+			  }
+
+			  sHead->pos_x--;
+			  sHead->pos_y++;
+
+			  // render new 'X'
+			  // TODO: we also have to delete the previous 'X', wich gives us the illusion of movement
+			  map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+
+			  // update game map
+			  for (int x = 0; x < map->width; x++) {
+				  buffer += '\n';
+				  for (int y = 0; y < map->height; y++) {
+					  buffer += map->boardArray[x][y];
+				  }
+			  }
+			  // std::cout - changed this to adopt the unicode
+			  std::wcout << buffer;
 	}
 }
 

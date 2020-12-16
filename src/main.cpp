@@ -1,10 +1,7 @@
 ﻿#include <iostream>
-// _setmode
-#include <io.h>
-// _O_U16TEXT
-#include <fcntl.h>
-// _TCHAR*
-#include <tchar.h>
+#include <io.h> // _setmode
+#include <fcntl.h> // _O_U16TEXT
+#include <tchar.h> // _TCHAR*
 
 #include "game.h"
 
