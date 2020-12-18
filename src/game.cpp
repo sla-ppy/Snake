@@ -3,26 +3,10 @@
 #include <iostream>
 #include <thread>
 #include <Windows.h> // for keystrokes
-#include <conio.h> // getch()
 
 #include "game.h"
 #include "rand.h"
-
-#define WM_CHAR 0x0102
-#define WM_KEYDOWN 0x0100
-#define VK_UP 0x26
-#define VK_DOWN 0x28
-#define VK_LEFT 0x25
-#define VK_RIGHT 0x27
-
-struct Gamemap {
-public:
-	static const int width = 20; //3;
-	static const int height = 40; //3;
-	// wchar_t - maybe for the UNICODE characters
-	// char
-	wchar_t boardArray[width][height]{};
-};
+#include "gamemap.h"
 
 struct SnakeNode {
 public:
@@ -123,11 +107,12 @@ void Game::update() {
 	{
 		// double buffering: reference in book
 		// std::string - changed this to adopt the unicode
+		
 		std::wstring buffer;
 
 		// limiting framerate
 		// was 100ms - but i changed it to 1000ms after i switched from ASCII to UNICODE
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 		// resets cursor to top left of the console window
 		// FIXME: cursor keeps blinking randomly throughout the gamemap
@@ -135,42 +120,72 @@ void Game::update() {
 
 		bool isMoving = false;
 
-		// TODO: continue from here
-		  case WM_KEYDOWN:
-			  switch (wParam)
-			  {
-			  case VK_LEFT:
-				  // Process the LEFT ARROW key.
-				  break;
-			  case VK_RIGHT:
-				  // Process the RIGHT ARROW key. 
-				  break;
-			  case VK_UP:
-				  // Process the UP ARROW key. 
-				  break;
-			  case VK_DOWN:
-				  // Process the DOWN ARROW key. 
-				  break;
-			  default:
-				  break;
-			  }
+		map->boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
-			  sHead->pos_x--;
-			  sHead->pos_y++;
+		// this is awful, it barely works, but it does work somewhat.
+		// FIXME: up & down aren't working, lol
+		// FIXME: buffering should be fixed
+		// collision is a joke atm, it doesn't even work
+		try
+		{
+			if (GetKeyState(VK_UP) & 0x26)
+			{
+				sHead->pos_x--;
+			}
+			if (GetKeyState(VK_DOWN) & 0x28)
+			{
+				std::cout << "DOWN" << std::endl;
+				sHead->pos_x++;
+			}
+			if (GetKeyState(VK_LEFT) & 0x25)
+			{
+				sHead->pos_y--;
+			}
+			if (GetKeyState(VK_RIGHT) & 0x27)
+			{
+				sHead->pos_y++;
+			}
 
-			  // render new 'X'
-			  // TODO: we also have to delete the previous 'X', wich gives us the illusion of movement
-			  map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+		}
+		catch (const std::exception&)
+		{
+			if (sHead->pos_y == 'X'
+				|| sHead->pos_y == L'\u2550'
+				|| sHead->pos_y == L'\u2551'
+				|| sHead->pos_y == L'\u2554'
+				|| sHead->pos_y == L'\u2557'
+				|| sHead->pos_y == L'\u255A'
+				|| sHead->pos_y == L'\u255D'
+				) {
+				throw std::exception("error");
+				std::cout << "Collision" << std::endl;
+			}
+			if (sHead->pos_x == 'X'
+				|| sHead->pos_x == L'\u2550'
+				|| sHead->pos_x == L'\u2551'
+				|| sHead->pos_x == L'\u2554'
+				|| sHead->pos_x == L'\u2557'
+				|| sHead->pos_x == L'\u255A'
+				|| sHead->pos_x == L'\u255D'
+				) {
+				throw std::exception("error");
+				std::cout << "Collision" << std::endl;
+			}
+		}
+		
+		// render new 'X'
+		// TODO: we also have to delete the previous 'X', wich gives us the illusion of movement
+		map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
-			  // update game map
-			  for (int x = 0; x < map->width; x++) {
-				  buffer += '\n';
-				  for (int y = 0; y < map->height; y++) {
-					  buffer += map->boardArray[x][y];
-				  }
-			  }
-			  // std::cout - changed this to adopt the unicode
-			  std::wcout << buffer;
+		// update game map
+		for (int x = 0; x < map->width; x++) {
+			buffer += '\n';
+			for (int y = 0; y < map->height; y++) {
+				buffer += map->boardArray[x][y];
+			}
+		}
+		// std::cout - changed this to adopt the unicode
+		std::wcout << buffer;
 	}
 }
 
