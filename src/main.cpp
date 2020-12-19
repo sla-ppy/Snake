@@ -5,6 +5,8 @@
 
 #include "game.h"
 
+#include <Windows.h>
+
 int main(int argc, _TCHAR* argv[]) {
 	// NOTE: if we set the output to this mode, we can only use:
 	// wprintf - for output instead of printf!
@@ -17,6 +19,6 @@ int main(int argc, _TCHAR* argv[]) {
 	game->deinit();
 
 	delete game;
-	
+
 	return 0;
 }

@@ -6,7 +6,18 @@
 
 #include "game.h"
 #include "rand.h"
-#include "gamemap.h"
+
+
+struct Gamemap {
+public:
+	static const int width = 20; //3;
+	static const int height = 40; //3;
+	// wchar_t - maybe for the UNICODE characters
+	// char
+	wchar_t boardArray[width][height]{};
+
+	void draw();
+};
 
 struct SnakeNode {
 public:
@@ -22,7 +33,6 @@ Gamemap* map = new Gamemap;
 SnakeHead* sHead = new SnakeHead;
 
 void Game::init() {
-	// draw game map
 	for (int x = 0; x < map->width; x++) {
 		for (int y = 0; y < map->height; y++) {
 			map->boardArray[x][y] = '.';
@@ -107,7 +117,7 @@ void Game::update() {
 	{
 		// double buffering: reference in book
 		// std::string - changed this to adopt the unicode
-		
+
 		std::wstring buffer;
 
 		// limiting framerate
@@ -118,61 +128,56 @@ void Game::update() {
 		// FIXME: cursor keeps blinking randomly throughout the gamemap
 		std::wcout << "\x1b[H" << std::flush;
 
-		bool isMoving = false;
-
 		map->boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
 		// this is awful, it barely works, but it does work somewhat.
 		// FIXME: up & down aren't working, lol
 		// FIXME: buffering should be fixed
 		// collision is a joke atm, it doesn't even work
-		try
-		{
-			if (GetKeyState(VK_UP) & 0x26)
-			{
-				sHead->pos_x--;
-			}
-			if (GetKeyState(VK_DOWN) & 0x28)
-			{
-				std::cout << "DOWN" << std::endl;
-				sHead->pos_x++;
-			}
-			if (GetKeyState(VK_LEFT) & 0x25)
-			{
-				sHead->pos_y--;
-			}
-			if (GetKeyState(VK_RIGHT) & 0x27)
-			{
-				sHead->pos_y++;
-			}
 
-		}
-		catch (const std::exception&)
+		if (GetAsyncKeyState(VK_UP) & 0x26)
 		{
-			if (sHead->pos_y == 'X'
-				|| sHead->pos_y == L'\u2550'
-				|| sHead->pos_y == L'\u2551'
-				|| sHead->pos_y == L'\u2554'
-				|| sHead->pos_y == L'\u2557'
-				|| sHead->pos_y == L'\u255A'
-				|| sHead->pos_y == L'\u255D'
-				) {
-				throw std::exception("error");
-				std::cout << "Collision" << std::endl;
-			}
-			if (sHead->pos_x == 'X'
-				|| sHead->pos_x == L'\u2550'
-				|| sHead->pos_x == L'\u2551'
-				|| sHead->pos_x == L'\u2554'
-				|| sHead->pos_x == L'\u2557'
-				|| sHead->pos_x == L'\u255A'
-				|| sHead->pos_x == L'\u255D'
-				) {
-				throw std::exception("error");
-				std::cout << "Collision" << std::endl;
-			}
+			sHead->pos_x--;
 		}
-		
+		if (GetAsyncKeyState(VK_DOWN) & 0x28)
+		{
+			sHead->pos_x++;
+		}
+		if (GetAsyncKeyState(VK_LEFT) & 0x25)
+		{
+			printf("Left");
+			sHead->pos_y--;
+		}
+		if (GetAsyncKeyState(VK_RIGHT) & 0x27)
+		{
+			printf("Right");
+			sHead->pos_y++;
+		}
+
+		if (sHead->pos_y == 'X'
+			|| sHead->pos_y == L'\u2550'
+			|| sHead->pos_y == L'\u2551'
+			|| sHead->pos_y == L'\u2554'
+			|| sHead->pos_y == L'\u2557'
+			|| sHead->pos_y == L'\u255A'
+			|| sHead->pos_y == L'\u255D'
+			) {
+			throw std::exception("error");
+			std::cout << "Collision" << std::endl;
+		}
+		if (sHead->pos_x == 'X'
+			|| sHead->pos_x == L'\u2550'
+			|| sHead->pos_x == L'\u2551'
+			|| sHead->pos_x == L'\u2554'
+			|| sHead->pos_x == L'\u2557'
+			|| sHead->pos_x == L'\u255A'
+			|| sHead->pos_x == L'\u255D'
+			) {
+			throw std::exception("error");
+			std::cout << "Collision" << std::endl;
+		}
+
+
 		// render new 'X'
 		// TODO: we also have to delete the previous 'X', wich gives us the illusion of movement
 		map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
@@ -186,6 +191,8 @@ void Game::update() {
 		}
 		// std::cout - changed this to adopt the unicode
 		std::wcout << buffer;
+
+		// GetAsyncKeyState - can be used for dungeon crawl movement style
 	}
 }
 
