@@ -30,13 +30,13 @@ SnakeHead* sHead = new SnakeHead;
 void Game::init() {
 
 	// top_bot & left_right are the same symbol, thats why they aren't stored seperately
-	enum boxDraw {
-		top_bot = L'\u2550',
-		left_right = L'\u2551',
-		topleft = L'\u2554',
-		topright = L'\u2557',
-		botleft = L'\u255A',
-		botright = L'\u255D'
+	enum boxEnum {
+		SIDES_TOP_BOT = L'\u2550',
+		SIDES_LEFT_RIGHT = L'\u2551',
+		CORNER_TOP_LEFT = L'\u2554',
+		CORNER_TOP_RIGHT = L'\u2557',
+		CORNER_BOT_LEFT = L'\u255A',
+		CORNER_BOT_RIGHT = L'\u255D'
 	};
 
 	for (int x = 0; x < map->width; x++) {
@@ -44,41 +44,33 @@ void Game::init() {
 			map->boardArray[x][y] = '.';
 
 			// BOX:
-			// top side
 			if (x < map->width / map->width) {
-				map->boardArray[x][y] = top_bot;
+				map->boardArray[x][y] = SIDES_TOP_BOT;
 			}
-			// bottom side
 			if (x == map->width - 1)
 			{
-				map->boardArray[x][y] = top_bot;
+				map->boardArray[x][y] = SIDES_TOP_BOT;
 			}
-			// left side
 			if (y < map->height / map->height) {
-				map->boardArray[x][y] = left_right;
+				map->boardArray[x][y] = SIDES_LEFT_RIGHT;
 			}
-			// right side
 			if (y == map->height - 1)
 			{
-				map->boardArray[x][y] = left_right;
+				map->boardArray[x][y] = SIDES_LEFT_RIGHT;
 			}
 
 			// CORNERS:
-			// top-left
 			if (x < map->width / map->width && y < map->height / map->height) {
-				map->boardArray[x][y] = topleft;
+				map->boardArray[x][y] = CORNER_TOP_LEFT;
 			}
-			// top-right
 			if (x < map->width / map->width && y == map->height - 1) {
-				map->boardArray[x][y] = topright;
+				map->boardArray[x][y] = CORNER_TOP_RIGHT;
 			}
-			// bottom-left
 			if (x == map->width - 1 && y < map->height / map->height) {
-				map->boardArray[x][y] = botleft;
+				map->boardArray[x][y] = CORNER_BOT_LEFT;
 			}
-			// bottom-right
 			if (x == map->width - 1 && y == map->height - 1) {
-				map->boardArray[x][y] = botright;
+				map->boardArray[x][y] = CORNER_BOT_RIGHT;
 			}
 
 			// SNAKE:
@@ -103,12 +95,12 @@ void Game::init() {
 		// ALT + SHIFT does stuff, interesting stuffffff!!! dont forget lol
 
 		if (apple != 'X' // this is a clear example that ascii number table wont be a solution here, because instead of 'XYZ' number, the ASCII character is recorded as something else like 'Í' in this case!
-			&& apple != top_bot //186  //'ş'
-			&& apple != left_right //205  //'Č'
-			&& apple != topleft //201  //'Ľ'
-			&& apple != topright //200  //'»'
-			&& apple != botleft //187  //'É'
-			&& apple != botright //188  //'X'
+			&& apple != SIDES_TOP_BOT //186  //'ş'
+			&& apple != SIDES_LEFT_RIGHT //205  //'Č'
+			&& apple != CORNER_TOP_LEFT //201  //'Ľ'
+			&& apple != CORNER_TOP_RIGHT //200  //'»'
+			&& apple != CORNER_BOT_LEFT //187  //'É'
+			&& apple != CORNER_BOT_RIGHT //188  //'X'
 			) {
 			map->boardArray[width][height] = 'O';
 			findingApplePos = false;
