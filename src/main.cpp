@@ -6,10 +6,8 @@
 #include "game.h"
 
 #include <Windows.h>
-
 int main() {
-	// NOTE: if we set the output to this mode, we can only use:
-	// wprintf - for output instead of printf!
+	// needed for unicode chars
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	Game* game = new Game;
