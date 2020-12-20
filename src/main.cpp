@@ -7,10 +7,10 @@
 
 #include <Windows.h>
 
-int main(int argc, _TCHAR* argv[]) {
+int main() {
 	// NOTE: if we set the output to this mode, we can only use:
 	// wprintf - for output instead of printf!
-	_setmode(_fileno(stdout), _O_U16TEXT);
+	_setmode(_fileno(stdout), _O_U8TEXT);
 
 	Game* game = new Game;
 

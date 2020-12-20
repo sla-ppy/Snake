@@ -7,16 +7,11 @@
 #include "game.h"
 #include "rand.h"
 
-
 struct Gamemap {
 public:
 	static const int width = 20; //3;
 	static const int height = 40; //3;
-	// wchar_t - maybe for the UNICODE characters
-	// char
 	wchar_t boardArray[width][height]{};
-
-	void draw();
 };
 
 struct SnakeNode {
@@ -36,6 +31,8 @@ void Game::init() {
 	for (int x = 0; x < map->width; x++) {
 		for (int y = 0; y < map->height; y++) {
 			map->boardArray[x][y] = '.';
+
+
 
 			// BOX:
 			// top side
@@ -92,15 +89,13 @@ void Game::init() {
 		int width = randGen(map->width);
 		int height = randGen(map->height);
 
-		// char
-		wchar_t apple = map->boardArray[width][height];
+		wchar_t  apple = map->boardArray[width][height];
 
 		// ALT + SHIFT does stuff, interesting stuffffff!!! dont forget lol
 
-		// FIXME: collision is now all whacky because of the extended ASCII table values, unsure why this isn't working!
 		if (apple != 'X' // this is a clear example that ascii number table wont be a solution here, because instead of 'XYZ' number, the ASCII character is recorded as something else like 'Í' in this case!
 			&& apple != L'\u2550' //186  //'ş'
-			&& apple != L'\u2551' //205  //'Č'	
+			&& apple != L'\u2551' //205  //'Č'
 			&& apple != L'\u2554' //201  //'Ľ'
 			&& apple != L'\u2557' //200  //'»'
 			&& apple != L'\u255A' //187  //'É'
@@ -116,70 +111,54 @@ void Game::update() {
 	while (true)
 	{
 		// double buffering: reference in book
-		// std::string - changed this to adopt the unicode
 
 		std::wstring buffer;
 
 		// limiting framerate
-		// was 100ms - but i changed it to 1000ms after i switched from ASCII to UNICODE
-		//std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		//std::this_thread::sleep_for(std::chrono::milliseconds(650));
 
-		// resets cursor to top left of the console window
 		// FIXME: cursor keeps blinking randomly throughout the gamemap
 		std::wcout << "\x1b[H" << std::flush;
 
+		// illusion of movement
 		map->boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
-		// this is awful, it barely works, but it does work somewhat.
-		// FIXME: up & down aren't working, lol
 		// FIXME: buffering should be fixed
-		// collision is a joke atm, it doesn't even work
 
-		if (GetAsyncKeyState(VK_UP) & 0x26)
+		// GetAsyncKeyState - can be used for dungeon crawl movement style
+		if (GetAsyncKeyState(VK_UP))
 		{
 			sHead->pos_x--;
 		}
-		if (GetAsyncKeyState(VK_DOWN) & 0x28)
+		if (GetAsyncKeyState(VK_DOWN))
 		{
 			sHead->pos_x++;
 		}
-		if (GetAsyncKeyState(VK_LEFT) & 0x25)
+		if (GetAsyncKeyState(VK_LEFT))
 		{
-			printf("Left");
 			sHead->pos_y--;
 		}
-		if (GetAsyncKeyState(VK_RIGHT) & 0x27)
+		if (GetAsyncKeyState(VK_RIGHT))
 		{
-			printf("Right");
 			sHead->pos_y++;
 		}
 
-		if (sHead->pos_y == 'X'
-			|| sHead->pos_y == L'\u2550'
-			|| sHead->pos_y == L'\u2551'
-			|| sHead->pos_y == L'\u2554'
-			|| sHead->pos_y == L'\u2557'
-			|| sHead->pos_y == L'\u255A'
-			|| sHead->pos_y == L'\u255D'
-			) {
-			throw std::exception("error");
-			std::cout << "Collision" << std::endl;
-		}
-		if (sHead->pos_x == 'X'
-			|| sHead->pos_x == L'\u2550'
-			|| sHead->pos_x == L'\u2551'
-			|| sHead->pos_x == L'\u2554'
-			|| sHead->pos_x == L'\u2557'
-			|| sHead->pos_x == L'\u255A'
-			|| sHead->pos_x == L'\u255D'
-			) {
-			throw std::exception("error");
-			std::cout << "Collision" << std::endl;
+		// check if apple dissapeared
+		for (int x = 0; x < map->width; x++) {
+			for (int y = 0; y < map->height; y++) {
+				if (map->boardArray[map->width][map->height]) {
+
+				}
+			}
+
 		}
 
+		// FIXME: collision should work like this, but i think since we are using unicode it doesn't work as intended
+		if (sHead->pos_x == map->width || sHead->pos_y == map->height) {
+			return;
+		}
 
 		// render new 'X'
-		// TODO: we also have to delete the previous 'X', wich gives us the illusion of movement
 		map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
 		// update game map
@@ -189,10 +168,7 @@ void Game::update() {
 				buffer += map->boardArray[x][y];
 			}
 		}
-		// std::cout - changed this to adopt the unicode
 		std::wcout << buffer;
-
-		// GetAsyncKeyState - can be used for dungeon crawl movement style
 	}
 }
 
