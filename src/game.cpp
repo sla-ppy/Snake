@@ -1,8 +1,6 @@
-// NOTE: game.cpp encoding was set to UTF-8
-
 #include <iostream>
 #include <thread>
-#include <Windows.h> // for keystrokes
+#include <Windows.h>
 
 #include "game.h"
 #include "rand.h"
@@ -29,7 +27,7 @@ SnakeHead* sHead = new SnakeHead;
 
 void Game::init() {
 
-	// top_bot & left_right are the same symbol, thats why they aren't stored seperately
+	// TOP_BOT & LEFT_RIGHT are the same symbol, thats why they aren't stored seperately
 	enum boxEnum {
 		SIDES_TOP_BOT = L'\u2550',
 		SIDES_LEFT_RIGHT = L'\u2551',
@@ -92,15 +90,13 @@ void Game::init() {
 
 		wchar_t  apple = map->boardArray[width][height];
 
-		// ALT + SHIFT does stuff, interesting stuffffff!!! dont forget lol
-
-		if (apple != 'X' // this is a clear example that ascii number table wont be a solution here, because instead of 'XYZ' number, the ASCII character is recorded as something else like 'Í' in this case!
-			&& apple != SIDES_TOP_BOT //186  //'ş'
-			&& apple != SIDES_LEFT_RIGHT //205  //'Č'
-			&& apple != CORNER_TOP_LEFT //201  //'Ľ'
-			&& apple != CORNER_TOP_RIGHT //200  //'»'
-			&& apple != CORNER_BOT_LEFT //187  //'É'
-			&& apple != CORNER_BOT_RIGHT //188  //'X'
+		if (apple != 'X'
+			&& apple != SIDES_TOP_BOT
+			&& apple != SIDES_LEFT_RIGHT
+			&& apple != CORNER_TOP_LEFT
+			&& apple != CORNER_TOP_RIGHT
+			&& apple != CORNER_BOT_LEFT
+			&& apple != CORNER_BOT_RIGHT
 			) {
 			map->boardArray[width][height] = 'O';
 			findingApplePos = false;
@@ -111,21 +107,22 @@ void Game::init() {
 void Game::update() {
 	while (true)
 	{
-		// double buffering: reference in book
+		// buffering
+		// TODO: could improve by implementing double buffering, which might solve the blinking issue so i wouldn't have to disable the cursor
 		std::wstring buffer;
 
 		// limiting framerate
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-		// FIXME: cursor keeps blinking randomly throughout the gamemap
+		// sets cursor position back to the "home" position
 		std::wcout << "\x1b[H" << std::flush;
 
-		// illusion of movement
+		// illusion of movement 1/2
+		// also turned out to be a clever solution to enable the apple spawning to continue, since missing the 'O' character from the array would mean we dont have any spawned yet.
 		map->boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
-		// 1. GetAsyncKeyState - for dungeon crawl
-		// 2. changing else-if to if will allow us to move diagonally too, which we dont want in this case
-
+		// MOVEMENT:
+		// FIXME: movement still needs attention
 		if (GetKeyState(VK_UP))
 		{
 			sHead->pos_x--;
@@ -145,6 +142,7 @@ void Game::update() {
 
 		// COLLISION:
 		// TODO: still needs snek collision for when it curls into itself
+		// also probaly a decent way to deal with collision, because even corners are handled this way, since both if's will be true if snek would somehow manage to get on the corner tile.
 		// top and left
 		if (sHead->pos_x == (map->width / map->width) -1 || sHead->pos_y == (map->height / map->height) -1) {
 			return;
@@ -154,6 +152,7 @@ void Game::update() {
 			return;
 		}
 
+		// illusion of movement 2/2
 		// render position of new 'X'
 		map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
