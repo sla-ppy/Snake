@@ -140,6 +140,15 @@ void Game::update() {
 			sHead->pos_y++;
 		}
 
+		/*
+		TODO:
+		1. movement is fucked up, but i think i know how to solve my problem
+		2. the snek collision, which shouldn't be too challenging
+		3. implementing my method of how the snake should move, node objects which point to the previous node's position, kinda like a linked list actually (yes i rly like this word)
+		4. making appleh spawn again when its value got set back to '.' so i'll need to find a way to figure out if one of the cell's value is set to 'O' or no
+		5. polish!
+		*/
+
 		// COLLISION:
 		// TODO: still needs snek collision for when it curls into itself
 		// also probaly a decent way to deal with collision, because even corners are handled this way, since both if's will be true if snek would somehow manage to get on the corner tile.
