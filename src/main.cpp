@@ -7,6 +7,16 @@
 
 #include <Windows.h>
 
+// Key Event Process
+VOID KeyEventProc(KEY_EVENT_RECORD ker)
+{
+	printf("Key event: ");
+
+	if (ker.bKeyDown)
+		printf("key pressed\n");
+	else printf("key released\n");
+}
+
 // StackOverFlow: basically hides the console cursor
 void ShowConsoleCursor(bool showFlag)
 {
@@ -20,6 +30,7 @@ void ShowConsoleCursor(bool showFlag)
 }
 
 int main() {
+
 	// needed for unicode chars
 	_setmode(_fileno(stdout), _O_U8TEXT);
 

@@ -19,7 +19,6 @@ public:
 };
 
 struct SnakeHead : SnakeNode {
-
 };
 
 Gamemap* map = new Gamemap;
@@ -29,6 +28,11 @@ void Game::init() {
 
 	// TOP_BOT & LEFT_RIGHT are the same symbol, thats why they aren't stored seperately
 	enum boxEnum {
+		// POLISH: alternate way to rendering box is by using win console api, and drawing with the graphical lines it provides.
+		//https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
+		//https://vt100.net/docs/vt220-rm/table2-4.html
+		// dot: "there's also the console screen buffer API with which you can "draw" character directly into the 2d screen buffer of the console"
+		// dot: "and if you're already going to be using non-standard stuff, might as well just go straight to the source"
 		SIDES_TOP_BOT = L'\u2550',
 		SIDES_LEFT_RIGHT = L'\u2551',
 		CORNER_TOP_LEFT = L'\u2554',
@@ -112,7 +116,7 @@ void Game::update() {
 		std::wstring buffer;
 
 		// limiting framerate
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 		// sets cursor position back to the "home" position
 		std::wcout << "\x1b[H" << std::flush;
@@ -123,27 +127,38 @@ void Game::update() {
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
-		if (GetKeyState(VK_UP))
+		
+		int vKey = 0;
+
+		if (GetAsyncKeyState(VK_UP))
 		{
 			sHead->pos_x--;
 		}
-		else if (GetKeyState(VK_DOWN))
+		if (GetAsyncKeyState(VK_DOWN))
 		{
-			sHead->pos_x++;
+			vKey = 40;
+			std::wcout << vKey;
+			//sHead->pos_x++;
+			while (vKey == 40) {
+				// wont work cuz doesn't have breakpoint, runs forever, bad bad bad
+				sHead->pos_x++;
+			}
 		}
-		else  if (GetKeyState(VK_LEFT))
+		if (GetAsyncKeyState(VK_LEFT))
 		{
 			sHead->pos_y--;
 		}
-		else  if (GetKeyState(VK_RIGHT))
+		if (GetAsyncKeyState(VK_RIGHT))
 		{
 			sHead->pos_y++;
 		}
 
+
+
 		/*
 		TODO:
 		1. movement is fucked up, but i think i know how to solve my problem
-		2. the snek collision, which shouldn't be too challenging
+		2. the snek collision, which shouldn't be too challenging, given any cell's value is "#", we got collision
 		3. implementing my method of how the snake should move, node objects which point to the previous node's position, kinda like a linked list actually (yes i rly like this word)
 		4. making appleh spawn again when its value got set back to '.' so i'll need to find a way to figure out if one of the cell's value is set to 'O' or no
 		5. polish!
