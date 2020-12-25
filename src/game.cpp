@@ -110,6 +110,13 @@ void Game::init() {
 	}
 }
 
+enum moveEnum {
+	UP_FLAG = false,
+	DOWN_FLAG = false,
+	LEFT_FLAG = false,
+	RIGHT_FLAG = false,
+};
+
 void Game::update() {
 	while (true)
 	{
@@ -129,6 +136,50 @@ void Game::update() {
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
+
+		// input handling part of the program
+		if (GetAsyncKeyState(VK_UP)) {
+			UP_FLAG = true;
+			DOWN_FLAG = false;
+			LEFT_FLAG = false;
+			RIGHT_FLAG = false;
+		}
+		if (GetAsyncKeyState(VK_DOWN)) {
+			UP_FLAG = false;
+			DOWN_FLAG = true;
+			LEFT_FLAG = false;
+			RIGHT_FLAG = false;
+		}
+		if (GetAsyncKeyState(VK_LEFT)) {
+			UP_FLAG = false;
+			DOWN_FLAG = false;
+			LEFT_FLAG = true;
+			RIGHT_FLAG = false;
+		}
+		if (GetAsyncKeyState(VK_RIGHT)) {
+			UP_FLAG = false;
+			DOWN_FLAG = false;
+			LEFT_FLAG = false;
+			RIGHT_FLAG = true;
+		}
+
+		// movement logic handling
+		if (UP_FLAG)
+		{
+			sHead->pos_x--;
+		}
+		else if (DOWN_FLAG)
+		{
+			sHead->pos_x++;
+		}
+		else if (LEFT_FLAG)
+		{
+			sHead->pos_y--;
+		}
+		else if (RIGHT_FLAG)
+		{
+			sHead->pos_y++;
+		}
 
 		/*
 		if (GetAsyncKeyState(VK_UP))
