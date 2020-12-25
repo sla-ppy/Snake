@@ -19,13 +19,16 @@ public:
 };
 
 struct SnakeHead : SnakeNode {
+public:
+	void move() {
+
+	}
 };
 
 Gamemap* map = new Gamemap;
 SnakeHead* sHead = new SnakeHead;
 
 void Game::init() {
-
 	// TOP_BOT & LEFT_RIGHT are the same symbol, thats why they aren't stored seperately
 	enum boxEnum {
 		// POLISH: alternate way to rendering box is by using win console api, and drawing with the graphical lines it provides.
@@ -88,7 +91,6 @@ void Game::init() {
 	bool findingApplePos = true;
 
 	while (findingApplePos) {
-
 		int width = randGen(map->width);
 		int height = randGen(map->height);
 
@@ -127,33 +129,32 @@ void Game::update() {
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
-		
-		int vKey = 0;
 
+		/*
 		if (GetAsyncKeyState(VK_UP))
 		{
+			std::wcout << VK_UP;
 			sHead->pos_x--;
 		}
-		if (GetAsyncKeyState(VK_DOWN))
+		else if (GetAsyncKeyState(VK_DOWN))
 		{
-			vKey = 40;
-			std::wcout << vKey;
-			//sHead->pos_x++;
-			while (vKey == 40) {
-				// wont work cuz doesn't have breakpoint, runs forever, bad bad bad
-				sHead->pos_x++;
-			}
+			std::wcout << VK_DOWN;
+			sHead->pos_x++;
 		}
-		if (GetAsyncKeyState(VK_LEFT))
+		else if (GetAsyncKeyState(VK_LEFT))
 		{
+			std::wcout << VK_LEFT;
 			sHead->pos_y--;
 		}
-		if (GetAsyncKeyState(VK_RIGHT))
+		else if (GetAsyncKeyState(VK_RIGHT))
 		{
+			std::wcout << VK_RIGHT;
 			sHead->pos_y++;
 		}
+		*/
 
-
+		sHead->pos_x += !!GetAsyncKeyState(VK_RIGHT) - !!GetAsyncKeyState(VK_LEFT);
+		sHead->pos_y += !!GetAsyncKeyState(VK_UP) - !!GetAsyncKeyState(VK_DOWN);
 
 		/*
 		TODO:
@@ -168,11 +169,12 @@ void Game::update() {
 		// TODO: still needs snek collision for when it curls into itself
 		// also probaly a decent way to deal with collision, because even corners are handled this way, since both if's will be true if snek would somehow manage to get on the corner tile.
 		// top and left
-		if (sHead->pos_x == (map->width / map->width) -1 || sHead->pos_y == (map->height / map->height) -1) {
+		if (sHead->pos_x == (map->width / map->width) - 1 || sHead->pos_y == (map->height / map->height) - 1) {
 			return;
 		}
+
 		// bottom and right
-		if (sHead->pos_x == (map->width -1) || sHead->pos_y == (map->height -1)) {
+		if (sHead->pos_x == (map->width - 1) || sHead->pos_y == (map->height - 1)) {
 			return;
 		}
 

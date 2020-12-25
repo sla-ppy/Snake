@@ -2,27 +2,16 @@
 #include <io.h> // _setmode
 #include <fcntl.h> // _O_U16TEXT
 #include <tchar.h> // _TCHAR*
-
-#include "game.h"
-
 #include <Windows.h>
 
-// Key Event Process
-VOID KeyEventProc(KEY_EVENT_RECORD ker)
-{
-	printf("Key event: ");
-
-	if (ker.bKeyDown)
-		printf("key pressed\n");
-	else printf("key released\n");
-}
+#include "game.h"
 
 // StackOverFlow: basically hides the console cursor
 void ShowConsoleCursor(bool showFlag)
 {
 	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	CONSOLE_CURSOR_INFO     cursorInfo;
+	CONSOLE_CURSOR_INFO cursorInfo;
 
 	GetConsoleCursorInfo(out, &cursorInfo);
 	cursorInfo.bVisible = showFlag; // set the cursor visibility
@@ -30,7 +19,6 @@ void ShowConsoleCursor(bool showFlag)
 }
 
 int main() {
-
 	// needed for unicode chars
 	_setmode(_fileno(stdout), _O_U8TEXT);
 
@@ -41,6 +29,8 @@ int main() {
 	game->init();
 	game->update();
 	game->deinit();
+
+	std::wcout << "You've died." << std::endl;
 
 	delete game;
 
