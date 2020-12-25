@@ -138,6 +138,7 @@ void Game::update() {
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
+		// Example: If we go up, we cant go down aka "reversing" cant happen.
 
 		// input handling part of the program
 		if (GetAsyncKeyState(VK_UP)) {
@@ -156,51 +157,27 @@ void Game::update() {
 			dir = dir; // dir stays the same
 		}
 
-		if (dir == UP) {
+		switch (dir) {
+		case UP:
 			sHead->pos_x--;
-		}
-		else if (dir == DOWN) {
+			break;
+		case DOWN:
 			sHead->pos_x++;
-		}
-		else if (dir == LEFT) {
+			break;
+		case LEFT:
 			sHead->pos_y--;
-		}
-		else if (dir == RIGHT) {
+			break;
+		case RIGHT:
 			sHead->pos_y++;
+			break;
 		}
-
-		//switch (dir) {
-		//case UP:
-		//	sHead->pos_x--;
-		//	break;
-		//case DOWN:
-		//	sHead->pos_x++;
-		//	break;
-		//case LEFT:
-		//	sHead->pos_y--;
-		//	break;
-		//case RIGHT:
-		//	sHead->pos_y++;
-		//	break;
-		//}
-
-		// movement logic handling
-		// if (dir == UP) {
-		//     sHead->pos_x--;
-		// } else if (dir == DOWN) {
-		//     sHead->pos_x++;
-		// } else if (left_flag) {
-		//     sHead->pos_y--;
-		// } else if (right_flag) {
-		//     sHead->pos_y++;
-		// }
 
 		/*
 		TODO:
-		2. the snek collision, which shouldn't be too challenging, given any cell's value is "#", we got collision
-		3. implementing my method of how the snake should move, node objects which point to the previous node's position, kinda like a linked list actually (yes i rly like this word)
-		4. making appleh spawn again when its value got set back to '.' so i'll need to find a way to figure out if one of the cell's value is set to 'O' or no
-		5. polish!
+		1. the snek collision, which shouldn't be too challenging, given any cell's value is "#", we got collision
+		2. implementing my method of how the snake should move, node objects which point to the previous node's position, kinda like a linked list actually (yes i rly like this word)
+		3. making appleh spawn again when its value got set back to '.' so i'll need to find a way to figure out if one of the cell's value is set to 'O' or no
+		4. polish!
 		*/
 
 		// COLLISION:
