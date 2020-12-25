@@ -110,14 +110,16 @@ void Game::init() {
 	}
 }
 
-enum moveEnum {
-	UP_FLAG = false,
-	DOWN_FLAG = false,
-	LEFT_FLAG = false,
-	RIGHT_FLAG = false,
+enum Direction {
+	NOTMOVING,
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
 };
 
 void Game::update() {
+	Direction dir = NOTMOVING;
 	while (true)
 	{
 		// buffering
@@ -139,77 +141,62 @@ void Game::update() {
 
 		// input handling part of the program
 		if (GetAsyncKeyState(VK_UP)) {
-			UP_FLAG = true;
-			DOWN_FLAG = false;
-			LEFT_FLAG = false;
-			RIGHT_FLAG = false;
+			dir = UP;
 		}
-		if (GetAsyncKeyState(VK_DOWN)) {
-			UP_FLAG = false;
-			DOWN_FLAG = true;
-			LEFT_FLAG = false;
-			RIGHT_FLAG = false;
+		else if (GetAsyncKeyState(VK_DOWN)) {
+			dir = DOWN;
 		}
-		if (GetAsyncKeyState(VK_LEFT)) {
-			UP_FLAG = false;
-			DOWN_FLAG = false;
-			LEFT_FLAG = true;
-			RIGHT_FLAG = false;
+		else if (GetAsyncKeyState(VK_LEFT)) {
+			dir = LEFT;
 		}
-		if (GetAsyncKeyState(VK_RIGHT)) {
-			UP_FLAG = false;
-			DOWN_FLAG = false;
-			LEFT_FLAG = false;
-			RIGHT_FLAG = true;
+		else if (GetAsyncKeyState(VK_RIGHT)) {
+			dir = RIGHT;
 		}
+		else {
+			dir = dir; // dir stays the same
+		}
+
+		if (dir == UP) {
+			sHead->pos_x--;
+		}
+		else if (dir == DOWN) {
+			sHead->pos_x++;
+		}
+		else if (dir == LEFT) {
+			sHead->pos_y--;
+		}
+		else if (dir == RIGHT) {
+			sHead->pos_y++;
+		}
+
+		//switch (dir) {
+		//case UP:
+		//	sHead->pos_x--;
+		//	break;
+		//case DOWN:
+		//	sHead->pos_x++;
+		//	break;
+		//case LEFT:
+		//	sHead->pos_y--;
+		//	break;
+		//case RIGHT:
+		//	sHead->pos_y++;
+		//	break;
+		//}
 
 		// movement logic handling
-		if (UP_FLAG)
-		{
-			sHead->pos_x--;
-		}
-		else if (DOWN_FLAG)
-		{
-			sHead->pos_x++;
-		}
-		else if (LEFT_FLAG)
-		{
-			sHead->pos_y--;
-		}
-		else if (RIGHT_FLAG)
-		{
-			sHead->pos_y++;
-		}
-
-		/*
-		if (GetAsyncKeyState(VK_UP))
-		{
-			std::wcout << VK_UP;
-			sHead->pos_x--;
-		}
-		else if (GetAsyncKeyState(VK_DOWN))
-		{
-			std::wcout << VK_DOWN;
-			sHead->pos_x++;
-		}
-		else if (GetAsyncKeyState(VK_LEFT))
-		{
-			std::wcout << VK_LEFT;
-			sHead->pos_y--;
-		}
-		else if (GetAsyncKeyState(VK_RIGHT))
-		{
-			std::wcout << VK_RIGHT;
-			sHead->pos_y++;
-		}
-		*/
-
-		sHead->pos_x += !!GetAsyncKeyState(VK_RIGHT) - !!GetAsyncKeyState(VK_LEFT);
-		sHead->pos_y += !!GetAsyncKeyState(VK_UP) - !!GetAsyncKeyState(VK_DOWN);
+		// if (dir == UP) {
+		//     sHead->pos_x--;
+		// } else if (dir == DOWN) {
+		//     sHead->pos_x++;
+		// } else if (left_flag) {
+		//     sHead->pos_y--;
+		// } else if (right_flag) {
+		//     sHead->pos_y++;
+		// }
 
 		/*
 		TODO:
-		1. movement is fucked up, but i think i know how to solve my problem
 		2. the snek collision, which shouldn't be too challenging, given any cell's value is "#", we got collision
 		3. implementing my method of how the snake should move, node objects which point to the previous node's position, kinda like a linked list actually (yes i rly like this word)
 		4. making appleh spawn again when its value got set back to '.' so i'll need to find a way to figure out if one of the cell's value is set to 'O' or no
@@ -221,12 +208,12 @@ void Game::update() {
 		// also probaly a decent way to deal with collision, because even corners are handled this way, since both if's will be true if snek would somehow manage to get on the corner tile.
 		// top and left
 		if (sHead->pos_x == (map->width / map->width) - 1 || sHead->pos_y == (map->height / map->height) - 1) {
-			return;
+			break;
 		}
 
 		// bottom and right
 		if (sHead->pos_x == (map->width - 1) || sHead->pos_y == (map->height - 1)) {
-			return;
+			break;
 		}
 
 		// illusion of movement 2/2
