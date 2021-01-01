@@ -2,15 +2,8 @@
 #include <thread>
 #include <Windows.h>
 
+#include "map.h"
 #include "game.h"
-#include "rand.h"
-
-struct Gamemap {
-public:
-	static const int width = 20; //3;
-	static const int height = 40; //3;
-	wchar_t boardArray[width][height]{};
-};
 
 struct SnakeNode {
 public:
@@ -19,95 +12,21 @@ public:
 };
 
 struct SnakeHead : SnakeNode {
-public:
-	void move() {
-
-	}
 };
 
-Gamemap* map = new Gamemap;
+Map* map = new Map;
 SnakeHead* sHead = new SnakeHead;
 
 void Game::init() {
-	// TOP_BOT & LEFT_RIGHT are the same symbol, thats why they aren't stored seperately
-	enum boxEnum {
-		// POLISH: alternate way to rendering box is by using win console api, and drawing with the graphical lines it provides.
-		//https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-		//https://vt100.net/docs/vt220-rm/table2-4.html
-		// dot: "there's also the console screen buffer API with which you can "draw" character directly into the 2d screen buffer of the console"
-		// dot: "and if you're already going to be using non-standard stuff, might as well just go straight to the source"
-		SIDES_TOP_BOT = L'\u2550',
-		SIDES_LEFT_RIGHT = L'\u2551',
-		CORNER_TOP_LEFT = L'\u2554',
-		CORNER_TOP_RIGHT = L'\u2557',
-		CORNER_BOT_LEFT = L'\u255A',
-		CORNER_BOT_RIGHT = L'\u255D'
-	};
+	map->initMap();
+	map->initApple();
 
-	for (int x = 0; x < map->width; x++) {
-		for (int y = 0; y < map->height; y++) {
-			map->boardArray[x][y] = '.';
-
-			// BOX:
-			if (x < map->width / map->width) {
-				map->boardArray[x][y] = SIDES_TOP_BOT;
-			}
-			if (x == map->width - 1)
-			{
-				map->boardArray[x][y] = SIDES_TOP_BOT;
-			}
-			if (y < map->height / map->height) {
-				map->boardArray[x][y] = SIDES_LEFT_RIGHT;
-			}
-			if (y == map->height - 1)
-			{
-				map->boardArray[x][y] = SIDES_LEFT_RIGHT;
-			}
-
-			// CORNERS:
-			if (x < map->width / map->width && y < map->height / map->height) {
-				map->boardArray[x][y] = CORNER_TOP_LEFT;
-			}
-			if (x < map->width / map->width && y == map->height - 1) {
-				map->boardArray[x][y] = CORNER_TOP_RIGHT;
-			}
-			if (x == map->width - 1 && y < map->height / map->height) {
-				map->boardArray[x][y] = CORNER_BOT_LEFT;
-			}
-			if (x == map->width - 1 && y == map->height - 1) {
-				map->boardArray[x][y] = CORNER_BOT_RIGHT;
-			}
-
-			// SNAKE:
-			// head
-			sHead->pos_x = map->width / 2;
-			sHead->pos_y = map->height / 2;
-			// render sHead
-			map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
-		}
-	}
-
-	// draw apple
-	bool findingApplePos = true;
-
-	while (findingApplePos) {
-		int width = randGen(map->width);
-		int height = randGen(map->height);
-
-		wchar_t  apple = map->boardArray[width][height];
-
-		if (apple != 'X'
-			&& apple != SIDES_TOP_BOT
-			&& apple != SIDES_LEFT_RIGHT
-			&& apple != CORNER_TOP_LEFT
-			&& apple != CORNER_TOP_RIGHT
-			&& apple != CORNER_BOT_LEFT
-			&& apple != CORNER_BOT_RIGHT
-			) {
-			map->boardArray[width][height] = 'O';
-			findingApplePos = false;
-		}
-	}
+	// SNAKE:
+	// head
+	sHead->pos_x = map->width / 2;
+	sHead->pos_y = map->height / 2;
+	// render sHead
+	map->Map::boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 }
 
 enum Direction {
@@ -134,7 +53,7 @@ void Game::update() {
 
 		// illusion of movement 1/2
 		// also turned out to be a clever solution to enable the apple spawning to continue, since missing the 'O' character from the array would mean we dont have any spawned yet.
-		map->boardArray[sHead->pos_x][sHead->pos_y] = '.';
+		map->Map::boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
@@ -195,17 +114,19 @@ void Game::update() {
 
 		// illusion of movement 2/2
 		// render position of new 'X'
-		map->boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+		map->Map::boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
 		// update game map
 		for (int x = 0; x < map->width; x++) {
 			buffer += '\n';
 			for (int y = 0; y < map->height; y++) {
-				buffer += map->boardArray[x][y];
+				buffer += map->Map::boardArray[x][y];
 			}
 		}
 		std::wcout << buffer;
 	}
+
+	std::wcout << "You've died." << std::endl;
 }
 
 void Game::deinit() {

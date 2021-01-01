@@ -30,8 +30,6 @@ int main() {
 	game->update();
 	game->deinit();
 
-	std::wcout << "You've died." << std::endl;
-
 	delete game;
 
 	return 0;
