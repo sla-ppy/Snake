@@ -23,10 +23,10 @@ void Game::init() {
 
 	// SNAKE:
 	// head
-	sHead->pos_x = map->width / 2;
-	sHead->pos_y = map->height / 2;
+	sHead->pos_x = map->m_width / 2;
+	sHead->pos_y = map->m_height / 2;
 	// render sHead
-	map->Map::boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+	map->Map::m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 }
 
 enum Direction {
@@ -53,7 +53,7 @@ void Game::update() {
 
 		// illusion of movement 1/2
 		// also turned out to be a clever solution to enable the apple spawning to continue, since missing the 'O' character from the array would mean we dont have any spawned yet.
-		map->Map::boardArray[sHead->pos_x][sHead->pos_y] = '.';
+		map->Map::m_boardArray[sHead->pos_x][sHead->pos_y] = '.';
 
 		// MOVEMENT:
 		// FIXME: movement still needs attention
@@ -103,24 +103,24 @@ void Game::update() {
 		// TODO: still needs snek collision for when it curls into itself
 		// also probaly a decent way to deal with collision, because even corners are handled this way, since both if's will be true if snek would somehow manage to get on the corner tile.
 		// top and left
-		if (sHead->pos_x == (map->width / map->width) - 1 || sHead->pos_y == (map->height / map->height) - 1) {
+		if (sHead->pos_x == (map->m_width / map->m_width) - 1 || sHead->pos_y == (map->m_height / map->m_height) - 1) {
 			break;
 		}
 
 		// bottom and right
-		if (sHead->pos_x == (map->width - 1) || sHead->pos_y == (map->height - 1)) {
+		if (sHead->pos_x == (map->m_width - 1) || sHead->pos_y == (map->m_height - 1)) {
 			break;
 		}
 
 		// illusion of movement 2/2
 		// render position of new 'X'
-		map->Map::boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+		map->Map::m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
 		// update game map
-		for (int x = 0; x < map->width; x++) {
+		for (int x = 0; x < map->m_width; x++) {
 			buffer += '\n';
-			for (int y = 0; y < map->height; y++) {
-				buffer += map->Map::boardArray[x][y];
+			for (int y = 0; y < map->m_height; y++) {
+				buffer += map->Map::m_boardArray[x][y];
 			}
 		}
 		std::wcout << buffer;

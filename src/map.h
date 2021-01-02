@@ -2,13 +2,11 @@
 #define MAP_H
 
 struct Map {
-	static const int width = 20; //3;
-	static const int height = 40; //3;
-	wchar_t boardArray[width][height];
+	static const int m_width = 20; //3;
+	static const int m_height = 40; //3;
+	wchar_t m_boardArray[m_width][m_height];
 
-public:
-	Map() {};
-	~Map() {};
+	//TODO: use the constructor for initalization instead of these two functions
 
 	void initMap();
 	void initApple();
