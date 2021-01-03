@@ -6,10 +6,7 @@ struct Map {
 	static const int m_height = 40; //3;
 	wchar_t m_boardArray[m_width][m_height];
 
-	//TODO: use the constructor for initalization instead of these two functions
-
-	void initMap();
-	void initApple();
+	Map();
 };
 
 #endif // !MAP_H

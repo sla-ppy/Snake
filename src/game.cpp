@@ -14,22 +14,26 @@ public:
 struct SnakeHead : SnakeNode {
 };
 
-Map* map = new Map;
-SnakeHead* sHead = new SnakeHead;
+// MASSIVE TODO: use RAII everywhere
+
+// declaring the game objects here
+SnakeHead* sHead { nullptr };
+Map* map { nullptr };
 
 void Game::init() {
-	map->initMap();
-	map->initApple();
 
-	// SNAKE:
-	// head
+	map = new Map;
+	sHead = new SnakeHead;
+
+	// INIT SNAKE:
 	sHead->pos_x = map->m_width / 2;
 	sHead->pos_y = map->m_height / 2;
-	// render sHead
+
+	// RENDER SNAKE
 	map->Map::m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 }
 
-enum Direction {
+enum class Direction {
 	NOTMOVING,
 	UP,
 	DOWN,
@@ -38,7 +42,8 @@ enum Direction {
 };
 
 void Game::update() {
-	Direction dir = NOTMOVING;
+	Direction dir = Direction::NOTMOVING;
+
 	while (true)
 	{
 		// buffering
@@ -61,32 +66,33 @@ void Game::update() {
 
 		// input handling part of the program
 		if (GetAsyncKeyState(VK_UP)) {
-			dir = UP;
+			dir = Direction::UP;
 		}
 		else if (GetAsyncKeyState(VK_DOWN)) {
-			dir = DOWN;
+			dir = Direction::DOWN;
 		}
 		else if (GetAsyncKeyState(VK_LEFT)) {
-			dir = LEFT;
+			dir = Direction::LEFT;
 		}
 		else if (GetAsyncKeyState(VK_RIGHT)) {
-			dir = RIGHT;
+			dir = Direction::RIGHT;
 		}
 		else {
 			dir = dir; // dir stays the same
 		}
 
+		// actual movement
 		switch (dir) {
-		case UP:
+		case Direction::UP:
 			sHead->pos_x--;
 			break;
-		case DOWN:
+		case Direction::DOWN:
 			sHead->pos_x++;
 			break;
-		case LEFT:
+		case Direction::LEFT:
 			sHead->pos_y--;
 			break;
-		case RIGHT:
+		case Direction::RIGHT:
 			sHead->pos_y++;
 			break;
 		}
@@ -127,8 +133,13 @@ void Game::update() {
 	}
 
 	std::wcout << "You've died." << std::endl;
+	// just so the error message doesn't ruin our map after game over
+	for (int i = 0; i < 20; i++) {
+		std::wcout << "\n";
+	}
 }
 
 void Game::deinit() {
 	delete map;
+	delete sHead;
 }

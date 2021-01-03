@@ -16,49 +16,29 @@ enum boxEnum {
 	CORNER_BOT_RIGHT = L'\u255D'
 };
 
-
-
-void Map::initMap() {
+Map::Map() {
 	for (int x = 0; x < Map::m_width; x++) {
 		for (int y = 0; y < Map::m_height; y++) {
-			//map->boardArray[x][y] = '.';
 			Map::m_boardArray[x][y] = '.';
 
-			// BOX:
+			// INIT BOX:
 			if (x < Map::m_width / Map::m_width) {
-				//map->boardArray[x][y] = SIDES_TOP_BOT;
 				Map::m_boardArray[x][y] = SIDES_TOP_BOT;
 			}
 			if (x == Map::m_width - 1)
 			{
-				//map->boardArray[x][y] = SIDES_TOP_BOT;
 				Map::m_boardArray[x][y] = SIDES_TOP_BOT;
 			}
 			if (y < Map::m_height / Map::m_height) {
-				//map->boardArray[x][y] = SIDES_LEFT_RIGHT;
 				Map::m_boardArray[x][y] = SIDES_LEFT_RIGHT;
 			}
 			if (y == Map::m_height - 1)
 			{
-				//map->boardArray[x][y] = SIDES_LEFT_RIGHT;
 				Map::m_boardArray[x][y] = SIDES_LEFT_RIGHT;
 			}
 
 			// CORNERS:
-			/*if (x < map->m_width / map->m_width && y < map->m_height / map->m_height) {
-				map->boardArray[x][y] = CORNER_TOP_LEFT;
-			}
-			if (x < map->m_width / map->m_width && y == map->m_height - 1) {
-				map->boardArray[x][y] = CORNER_TOP_RIGHT;
-			}
-			if (x == map->m_width - 1 && y < map->m_height / map->m_height) {
-				map->boardArray[x][y] = CORNER_BOT_LEFT;
-			}
-			if (x == map->m_width - 1 && y == map->m_height - 1) {
-				map->boardArray[x][y] = CORNER_BOT_RIGHT;
-			}*/
-
-			if (x < Map::m_width / Map::m_height && y < Map::m_height / Map::m_height) {
+			if (x < Map::m_width / Map::m_width && y < Map::m_height / Map::m_height) {
 				Map::m_boardArray[x][y] = CORNER_TOP_LEFT;
 			}
 			if (x < Map::m_width / Map::m_width && y == Map::m_height - 1) {
@@ -72,17 +52,15 @@ void Map::initMap() {
 			}
 		}
 	}
-}
 
-void Map::initApple() {
-	// draw apple
+	// INIT APPLE:
 	bool findingApplePos = true;
 
 	while (findingApplePos) {
-		int width = randGen(Map::m_width);
-		int height = randGen(Map::m_height);
+		int randWidth = randGen(Map::m_width);
+		int randHeight = randGen(Map::m_height);
 
-		wchar_t  apple = Map::m_boardArray[width][height];
+		wchar_t  apple = Map::m_boardArray[randWidth][randHeight];
 
 		if (apple != 'X'
 			&& apple != SIDES_TOP_BOT
@@ -92,7 +70,7 @@ void Map::initApple() {
 			&& apple != CORNER_BOT_LEFT
 			&& apple != CORNER_BOT_RIGHT
 			) {
-			Map::m_boardArray[width][height] = 'O';
+			Map::m_boardArray[randWidth][randHeight] = 'O';
 			findingApplePos = false;
 		}
 	}
