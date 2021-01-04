@@ -53,25 +53,32 @@ Map::Map() {
 		}
 	}
 
+	// check whole array if apple exists, if no then continue
+	bool initApple = true;
+
 	// INIT APPLE:
-	bool findingApplePos = true;
+	while (initApple) {
 
-	while (findingApplePos) {
-		int randWidth = randGen(Map::m_width);
-		int randHeight = randGen(Map::m_height);
+		Map::randWidth = randGen(Map::m_width);
+		Map::randHeight = randGen(Map::m_height);
 
-		wchar_t  apple = Map::m_boardArray[randWidth][randHeight];
+		Map::apple = Map::m_boardArray[Map::randWidth][Map::randHeight];
 
-		if (apple != 'X'
-			&& apple != SIDES_TOP_BOT
-			&& apple != SIDES_LEFT_RIGHT
-			&& apple != CORNER_TOP_LEFT
-			&& apple != CORNER_TOP_RIGHT
-			&& apple != CORNER_BOT_LEFT
-			&& apple != CORNER_BOT_RIGHT
+		if (Map::apple != 'X'
+			&& Map::apple != '#'
+			&& Map::apple != SIDES_TOP_BOT
+			&& Map::apple != SIDES_LEFT_RIGHT
+			&& Map::apple != CORNER_TOP_LEFT
+			&& Map::apple != CORNER_TOP_RIGHT
+			&& Map::apple != CORNER_BOT_LEFT
+			&& Map::apple != CORNER_BOT_RIGHT
 			) {
 			Map::m_boardArray[randWidth][randHeight] = 'O';
-			findingApplePos = false;
+			initApple = false;
 		}
 	}
+}
+
+void Map::updateApple() {
+	bool spawnApple = true;
 }

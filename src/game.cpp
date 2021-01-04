@@ -77,6 +77,12 @@ void Game::update() {
 		else if (GetAsyncKeyState(VK_RIGHT)) {
 			dir = Direction::RIGHT;
 		}
+		else if (GetAsyncKeyState(VK_SPACE)) {
+			// debug apple spawning
+			std::wcout << "Space";
+			map->Map::updateApple();
+
+		}
 		else {
 			dir = dir; // dir stays the same
 		}
@@ -95,6 +101,17 @@ void Game::update() {
 		case Direction::RIGHT:
 			sHead->pos_y++;
 			break;
+		}
+
+		// not sure if this would work
+		if (sHead->pos_x == map->apple || sHead->pos_y == map->apple) {
+			std::wcout << "Apple hit" << std::endl;
+		}
+
+		// wont work like this
+		if (sHead->pos_x == 'O' || sHead->pos_y == 'O') {
+			std::wcout << "Apple hit." << std::endl;
+			// spawn apple here
 		}
 
 		/*
@@ -131,7 +148,7 @@ void Game::update() {
 		}
 		std::wcout << buffer;
 	}
-
+	
 	std::wcout << "You've died." << std::endl;
 	// just so the error message doesn't ruin our map after game over
 	for (int i = 0; i < 20; i++) {
