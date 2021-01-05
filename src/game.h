@@ -4,11 +4,28 @@
 #include <string>
 #include <functional>
 
+#include "snake.h"
+#include "map.h"
+
+enum class Direction {
+	NOTMOVING,
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
 class Game {
 public:
-	void init();
+	Snake* sHead{ nullptr };
+	Map* map{ nullptr };
+
 	void update();
-	void deinit();
+	void inputCheck(Direction& dir);
+	void doMovement(Direction& dir);
+
+	Game();
+	~Game();
 };
 
 #endif // GAME_H

@@ -26,9 +26,7 @@ int main() {
 
 	ShowConsoleCursor(false);
 
-	game->init();
 	game->update();
-	game->deinit();
 
 	delete game;
 

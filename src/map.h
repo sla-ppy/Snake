@@ -13,7 +13,7 @@ struct Map {
 
 	Map();
 
-	static void updateApple();
+	void spawnApple();
 };
 
 #endif // !MAP_H
