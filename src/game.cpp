@@ -35,18 +35,43 @@ void Game::doMovement(Direction& dir) {
 	switch (dir) {
 	case Direction::UP:
 		sHead->pos_x--;
+		std::wcout << sHead->pos_x;
 		break;
 	case Direction::DOWN:
 		sHead->pos_x++;
+		std::wcout << sHead->pos_x;
 		break;
 	case Direction::LEFT:
 		sHead->pos_y--;
+		std::wcout << sHead->pos_y;
 		break;
 	case Direction::RIGHT:
 		sHead->pos_y++;
+		std::wcout << sHead->pos_y;
+		// this is terrible
+		{int current_pos_y2 = sHead->pos_y;
+		current_pos_y2 -= sHead->pos_y++;
+		std::wcout << current_pos_y2;}
 		break;
 	}
 }
+
+
+// taken from slappy-test, might be the way to go
+//Snake* sCells{ nullptr };
+//size_t cell_count{ 5 };
+//
+//sCells = new Snake[cell_count];
+//
+//void resize_asteroids_to(size_t new_size) {
+//	Snake* new_cells = new Snake[new_size];
+//	for (size_t i = 0; i < cell_count; ++i) {
+//		new_cells[i] = sCells[i];
+//	}
+//	delete[] sCells;
+//	sCells = new_cells;
+//	cell_count = new_size;
+//}
 
 Game::Game() {
 	map = new Map;
@@ -91,13 +116,23 @@ void Game::update() {
 
 		/*
 		TODO:
-		1. snake body
-		2. check if needed: movement reversing issue
+		I. snake body:
+			1. sCells[i]++ when apple is hit
+			2. assign new cell to the previous cell's previous location
+			3. make cell follow the next cell's previous location each frame
+			4. render sCells as a whole
+		II. check if needed: movement reversing issue
+		III. FIXME: sometimes apple doesn't spawn when game is init
 		*/
 
 		// illusion of movement 2/2
 		// render position of new 'X'
 		map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+
+		// render snake cells
+		//for (int i = 0; i < sCells[i]; i++) {
+		//	map->m_boardArray[sCells[i]->pos_x][sCells[i]->pos_y] = '#';
+		//}
 
 		// update game map
 		for (int x = 0; x < map->m_width; x++) {

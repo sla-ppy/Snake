@@ -7,8 +7,4 @@ public:
 	int pos_y{ 0 };
 };
 
-struct SnakeNode : Snake {
-
-};
-
 #endif // !SNAKE_H
