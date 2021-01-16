@@ -6,14 +6,17 @@ struct Map {
 	static const int m_height = 40; //3;
 	wchar_t m_boardArray[m_width][m_height];
 
-	int randWidth { 0 };
-	int randHeight { 0 };
+	Map();
+};
+
+struct Apple {
+	int randPosX{ 0 };
+	int randPosY{ 0 };
 
 	wchar_t apple;
 
-	Map();
+	Apple();
 
-	void spawnApple();
+	void genApplePos();
 };
-
 #endif // !MAP_H

@@ -11,6 +11,9 @@
 void Game::inputCheck(Direction& dir) {
 	if (GetAsyncKeyState(VK_UP)) {
 		dir = Direction::UP;
+		if (dir == Direction::UP){
+			dir != Direction::DOWN;
+		}
 	}
 	else if (GetAsyncKeyState(VK_DOWN)) {
 		dir = Direction::DOWN;
@@ -23,8 +26,8 @@ void Game::inputCheck(Direction& dir) {
 	}
 	else if (GetAsyncKeyState(VK_SPACE)) {
 		// debug apple spawning
-		map->spawnApple();
-	}
+		apple->genApplePos();
+	} 
 	else {
 		dir = dir; // dir stays the same
 	}
@@ -35,23 +38,15 @@ void Game::doMovement(Direction& dir) {
 	switch (dir) {
 	case Direction::UP:
 		sHead->pos_x--;
-		std::wcout << sHead->pos_x;
 		break;
 	case Direction::DOWN:
 		sHead->pos_x++;
-		std::wcout << sHead->pos_x;
 		break;
 	case Direction::LEFT:
 		sHead->pos_y--;
-		std::wcout << sHead->pos_y;
 		break;
 	case Direction::RIGHT:
 		sHead->pos_y++;
-		std::wcout << sHead->pos_y;
-		// this is terrible
-		{int current_pos_y2 = sHead->pos_y;
-		current_pos_y2 -= sHead->pos_y++;
-		std::wcout << current_pos_y2;}
 		break;
 	}
 }
@@ -73,9 +68,11 @@ void Game::doMovement(Direction& dir) {
 //	cell_count = new_size;
 //}
 
+
 Game::Game() {
 	map = new Map;
 	sHead = new Snake;
+	apple = new Apple;
 
 	// INIT SNAKE:
 	sHead->pos_x = map->m_width / 2;
@@ -90,10 +87,10 @@ void Game::update() {
 
 	while (true)
 	{
-		// double buffering
+		// DOUBLE BUFFER:
 		std::wstring buffer;
 
-		// limiting framerate
+		// LIMIT FRAMERATE:
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 		// sets cursor position back to the "home" position
@@ -106,12 +103,30 @@ void Game::update() {
 		inputCheck(dir);
 		doMovement(dir);
 
-		// COLLISION:
+		// WALL COLLISION:
 		if (sHead->pos_x <= 0
 			|| sHead->pos_y <= 0
 			|| sHead->pos_x >= (map->m_width - 1)
 			|| sHead->pos_y >= (map->m_height - 1)) {
 			break;
+		}
+
+		// APPLE:
+		// FIXME: apple spawning has an issue 
+		map->m_boardArray[apple->randPosX][apple->randPosY];
+
+		//if (apple == '.') {
+		//	map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+		//}
+
+		if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+			map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+		}
+
+		// APPLE COLLISION:
+		if (sHead->pos_x == apple->randPosX && sHead->pos_y == apple->randPosY) {
+			std::wcout << "Apple hit.";
+			map->m_boardArray[apple->randPosX][apple->randPosY] = '.';
 		}
 
 		/*
@@ -155,4 +170,5 @@ void Game::update() {
 Game::~Game() {
 	delete map;
 	delete sHead;
+	delete apple;
 }

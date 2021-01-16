@@ -53,18 +53,14 @@ Map::Map() {
 			m_boardArray[x][y] = tile;
 		}
 	}
-	// first apple spawn
-	spawnApple();
 }
 
-void Map::spawnApple() {
-	// INIT APPLE:
-	randWidth = randGen(m_width);
-	randHeight = randGen(m_height);
+Apple::Apple() {
+	genApplePos();
+}
 
-	apple = m_boardArray[randWidth][randHeight];
-
-	if (apple == '.') {
-		m_boardArray[randWidth][randHeight] = 'O';
-	}
+void Apple::genApplePos() {
+	// INIT APPLE POS:
+	randPosX = randGen(Map::m_width);
+	randPosY = randGen(Map::m_height);
 }

@@ -19,6 +19,7 @@ class Game {
 public:
 	Snake* sHead{ nullptr };
 	Map* map{ nullptr };
+	Apple* apple{ nullptr };
 
 	void update();
 	void inputCheck(Direction& dir);
