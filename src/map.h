@@ -2,9 +2,9 @@
 #define MAP_H
 
 struct Map {
-	static const int m_width = 20; //3;
-	static const int m_height = 40; //3;
-	wchar_t m_boardArray[m_width][m_height];
+	static const int width = 20; //3;
+	static const int height = 40; //3;
+	wchar_t m_boardArray[width][height];
 
 	Map();
 };

@@ -6,14 +6,9 @@
 #include "game.h"
 #include "snake.h"
 
-// declaring the game objects here
-
 void Game::inputCheck(Direction& dir) {
 	if (GetAsyncKeyState(VK_UP)) {
 		dir = Direction::UP;
-		if (dir == Direction::UP){
-			dir != Direction::DOWN;
-		}
 	}
 	else if (GetAsyncKeyState(VK_DOWN)) {
 		dir = Direction::DOWN;
@@ -24,10 +19,6 @@ void Game::inputCheck(Direction& dir) {
 	else if (GetAsyncKeyState(VK_RIGHT)) {
 		dir = Direction::RIGHT;
 	}
-	else if (GetAsyncKeyState(VK_SPACE)) {
-		// debug apple spawning
-		apple->genApplePos();
-	} 
 	else {
 		dir = dir; // dir stays the same
 	}
@@ -51,35 +42,23 @@ void Game::doMovement(Direction& dir) {
 	}
 }
 
-
-// taken from slappy-test, might be the way to go
-//Snake* sCells{ nullptr };
-//size_t cell_count{ 5 };
-//
-//sCells = new Snake[cell_count];
-//
-//void resize_asteroids_to(size_t new_size) {
-//	Snake* new_cells = new Snake[new_size];
-//	for (size_t i = 0; i < cell_count; ++i) {
-//		new_cells[i] = sCells[i];
-//	}
-//	delete[] sCells;
-//	sCells = new_cells;
-//	cell_count = new_size;
-//}
-
-
 Game::Game() {
 	map = new Map;
 	sHead = new Snake;
 	apple = new Apple;
 
 	// INIT SNAKE:
-	sHead->pos_x = map->m_width / 2;
-	sHead->pos_y = map->m_height / 2;
+	sHead->pos_x = map->width / 2;
+	sHead->pos_y = map->height / 2;
 
-	// RENDER SNAKE
+	// RENDER SNAKE:
 	map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+
+	// APPLE:
+	// FIXME: apple spawning is wrong, because its able to spawn outside of our playfield, possibly a -1, -1 issue of going over the limit
+	if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+		map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+	}
 }
 
 void Game::update() {
@@ -106,27 +85,20 @@ void Game::update() {
 		// WALL COLLISION:
 		if (sHead->pos_x <= 0
 			|| sHead->pos_y <= 0
-			|| sHead->pos_x >= (map->m_width - 1)
-			|| sHead->pos_y >= (map->m_height - 1)) {
+			|| sHead->pos_x >= (map->width - 1)
+			|| sHead->pos_y >= (map->height - 1)) {
 			break;
-		}
-
-		// APPLE:
-		// FIXME: apple spawning has an issue 
-		map->m_boardArray[apple->randPosX][apple->randPosY];
-
-		//if (apple == '.') {
-		//	map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
-		//}
-
-		if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
-			map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
 		}
 
 		// APPLE COLLISION:
 		if (sHead->pos_x == apple->randPosX && sHead->pos_y == apple->randPosY) {
 			std::wcout << "Apple hit.";
 			map->m_boardArray[apple->randPosX][apple->randPosY] = '.';
+
+			apple->genApplePos();
+			if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+				map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+			}
 		}
 
 		/*
@@ -144,15 +116,10 @@ void Game::update() {
 		// render position of new 'X'
 		map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
-		// render snake cells
-		//for (int i = 0; i < sCells[i]; i++) {
-		//	map->m_boardArray[sCells[i]->pos_x][sCells[i]->pos_y] = '#';
-		//}
-
 		// update game map
-		for (int x = 0; x < map->m_width; x++) {
+		for (int x = 0; x < map->width; x++) {
 			buffer += '\n';
-			for (int y = 0; y < map->m_height; y++) {
+			for (int y = 0; y < map->height; y++) {
 				buffer += map->m_boardArray[x][y];
 			}
 		}

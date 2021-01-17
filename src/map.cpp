@@ -18,22 +18,22 @@ enum boxEnum {
 
 Map::Map() {
 	// INIT BOX:
-	for (int x = 0; x < m_width; x++) {
-		for (int y = 0; y < m_height; y++) {
+	for (int x = 0; x < width; x++) {
+		for (int y = 0; y < height; y++) {
 			wchar_t tile = '.';
 
 			// TOP BOTTOM:
 			if (x < 1) {
 				tile = SIDES_TOP_BOT;
 			}
-			else if (x == m_width - 1) {
+			else if (x == width - 1) {
 				tile = SIDES_TOP_BOT;
 			}
 			// LEFT RIGHT:
 			if (y < 1) {
 				tile = SIDES_LEFT_RIGHT;
 			}
-			else if (y == m_height - 1) {
+			else if (y == height - 1) {
 				tile = SIDES_LEFT_RIGHT;
 			}
 
@@ -41,13 +41,13 @@ Map::Map() {
 			if (x < 1 && y < 1) {
 				tile = CORNER_TOP_LEFT;
 			}
-			else if (x < 1 && y == m_height - 1) {
+			else if (x < 1 && y == height - 1) {
 				tile = CORNER_TOP_RIGHT;
 			}
-			else if (x == m_width - 1 && y < 1) {
+			else if (x == width - 1 && y < 1) {
 				tile = CORNER_BOT_LEFT;
 			}
-			else if (x == m_width - 1 && y == m_height - 1) {
+			else if (x == width - 1 && y == height - 1) {
 				tile = CORNER_BOT_RIGHT;
 			}
 			m_boardArray[x][y] = tile;
@@ -60,7 +60,6 @@ Apple::Apple() {
 }
 
 void Apple::genApplePos() {
-	// INIT APPLE POS:
-	randPosX = randGen(Map::m_width);
-	randPosY = randGen(Map::m_height);
+	randPosX = randGen(Map::width);
+	randPosY = randGen(Map::height);
 }
