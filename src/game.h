@@ -26,6 +26,7 @@ public:
 	void doMovement(Direction& dir);
 
 	Game();
+	Game(const Game&) = delete;
 	~Game();
 };
 

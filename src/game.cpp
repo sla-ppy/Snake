@@ -56,8 +56,16 @@ Game::Game() {
 
 	// APPLE:
 	// FIXME: apple spawning is wrong, because its able to spawn outside of our playfield, possibly a -1, -1 issue of going over the limit
-	if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
-		map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+
+	bool appleSpawned = false;
+
+	while (appleSpawned == false) {
+		apple->genApplePos();
+
+		if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+			map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+			appleSpawned = true;
+		}
 	}
 }
 
@@ -95,9 +103,15 @@ void Game::update() {
 			std::wcout << "Apple hit.";
 			map->m_boardArray[apple->randPosX][apple->randPosY] = '.';
 
-			apple->genApplePos();
-			if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
-				map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+			bool appleSpawned = false;
+
+			while (appleSpawned == false) {
+				apple->genApplePos();
+
+				if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+					map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+					appleSpawned = true;
+				}
 			}
 		}
 
