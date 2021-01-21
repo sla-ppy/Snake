@@ -29,15 +29,19 @@ void Game::doMovement(Direction& dir) {
 	switch (dir) {
 	case Direction::UP:
 		sHead->pos_x--;
+		//sHead->prev_pos_x = sHead->pos_x++;
 		break;
 	case Direction::DOWN:
 		sHead->pos_x++;
+		//sHead->prev_pos_x = sHead->pos_x--;
 		break;
 	case Direction::LEFT:
 		sHead->pos_y--;
+		//sHead->prev_pos_y = sHead->pos_y++;
 		break;
 	case Direction::RIGHT:
 		sHead->pos_y++;
+		//sHead->prev_pos_y = sHead->pos_y--;
 		break;
 	}
 }
@@ -54,9 +58,7 @@ Game::Game() {
 	// RENDER SNAKE:
 	map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
 
-	// APPLE:
-	// FIXME: apple spawning is wrong, because its able to spawn outside of our playfield, possibly a -1, -1 issue of going over the limit
-
+	// INIT APPLE:
 	bool appleSpawned = false;
 
 	while (appleSpawned == false) {
@@ -89,6 +91,26 @@ void Game::update() {
 		// MOVEMENT:
 		inputCheck(dir);
 		doMovement(dir);
+
+		// getting previous movement values
+		if (dir == Direction::UP) {
+			sHead->prev_pos_x = sHead->pos_x - 1;
+		}
+		if (dir == Direction::DOWN) {
+			sHead->prev_pos_x = sHead->pos_x - 1;
+		}
+		if (dir == Direction::LEFT) {
+			sHead->prev_pos_y = sHead->pos_y + 1;
+		}
+		if (dir == Direction::RIGHT) {
+			sHead->prev_pos_y = sHead->pos_y - 1;
+		}
+
+		std::wcout << sHead->pos_x << std::endl;
+		std::wcout << sHead->prev_pos_x << std::endl;
+
+		std::wcout << sHead->pos_y << std::endl;
+		std::wcout << sHead->prev_pos_y << std::endl;
 
 		// WALL COLLISION:
 		if (sHead->pos_x <= 0
@@ -123,7 +145,6 @@ void Game::update() {
 			3. make cell follow the next cell's previous location each frame
 			4. render sCells as a whole
 		II. check if needed: movement reversing issue
-		III. FIXME: sometimes apple doesn't spawn when game is init
 		*/
 
 		// illusion of movement 2/2

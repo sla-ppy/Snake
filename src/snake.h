@@ -6,6 +6,8 @@ public:
 	int pos_x{ 0 };
 	int pos_y{ 0 };
 
+    int prev_pos_x{ 0 };
+    int prev_pos_y{ 0 };
 
     // TODO: snake body goes here, we ask for the size through function, find last segment through that and turn last cell's prev position into '.'
     Snake* cells{ nullptr };
@@ -21,6 +23,9 @@ public:
         cells = new_cells;
         cell_count = new_size;
     }
+
+    // we need a last ptr, which we always assign the value for, being the previous last node's location
+
 };
 
 #endif // !SNAKE_H
