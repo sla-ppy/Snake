@@ -23,9 +23,7 @@ public:
         cells = new_cells;
         cell_count = new_size;
     }
-
     // we need a last ptr, which we always assign the value for, being the previous last node's location
-
 };
 
 #endif // !SNAKE_H

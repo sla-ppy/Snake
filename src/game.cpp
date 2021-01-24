@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <Windows.h>
+#include <vector>
 
 #include "map.h"
 #include "game.h"
@@ -44,6 +45,22 @@ void Game::doMovement(Direction& dir) {
 		//sHead->prev_pos_y = sHead->pos_y--;
 		break;
 	}
+}
+
+// overloading "<<" to be able to print custom type
+std::wostream& operator<<(std::wostream& os, const Snake& snake) {
+	return os << "[Snake]"
+		<< std::endl
+		<< "pos_x:"
+		<< snake.pos_x
+		<< " "
+		<< "prev_pos_x:"
+		<< snake.prev_pos_x
+		<< " " << "pos_y:"
+		<< snake.pos_y
+		<< " "
+		<< "prev_pos_y:"
+		<< snake.prev_pos_y;
 }
 
 Game::Game() {
@@ -93,6 +110,7 @@ void Game::update() {
 		doMovement(dir);
 
 		// getting previous movement values
+		// TODO: put this in a loop, and prev_pos values always take the current node's values, hence movement happens.
 		if (dir == Direction::UP) {
 			sHead->prev_pos_x = sHead->pos_x - 1;
 		}
@@ -106,11 +124,9 @@ void Game::update() {
 			sHead->prev_pos_y = sHead->pos_y - 1;
 		}
 
-		std::wcout << sHead->pos_x << std::endl;
-		std::wcout << sHead->prev_pos_x << std::endl;
-
-		std::wcout << sHead->pos_y << std::endl;
-		std::wcout << sHead->prev_pos_y << std::endl;
+		//FIXME: still doesn't display last value perfectly
+		std::wcout << "\x1b[K";
+		std::wcout << *sHead << std::endl;
 
 		// WALL COLLISION:
 		if (sHead->pos_x <= 0
@@ -119,6 +135,9 @@ void Game::update() {
 			|| sHead->pos_y >= (map->height - 1)) {
 			break;
 		}
+
+		// vector that contains snake objects
+		std::vector<Snake> sCells;
 
 		// APPLE COLLISION:
 		if (sHead->pos_x == apple->randPosX && sHead->pos_y == apple->randPosY) {
@@ -136,6 +155,25 @@ void Game::update() {
 				}
 			}
 		}
+
+		// when collision happens
+		// push back 1 snake obj on "stack"
+		sCells.push_back(Snake{});
+
+		std::wcout << std::endl;
+		for (const auto& snake: sCells) {
+			std::wcout << snake.pos_x << std::endl;
+			std::wcout << snake.pos_y << std::endl;
+			std::wcout << snake.prev_pos_x << std::endl;
+			std::wcout << snake.prev_pos_y << std::endl;
+		}
+
+		// how many objects
+		// score = snake length
+		sCells.size();
+
+		// needed for resizing
+		//sCells.reserve(vectorSize);
 
 		/*
 		TODO:
@@ -164,7 +202,7 @@ void Game::update() {
 	std::wcout << "You've died." << std::endl;
 
 	// just so the error message doesn't ruin our map after game over
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 25; i++) {
 		std::wcout << "\n";
 	}
 }
@@ -173,4 +211,5 @@ Game::~Game() {
 	delete map;
 	delete sHead;
 	delete apple;
+	// destroy vector here. destroying vector means we also destroy objects
 }

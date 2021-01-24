@@ -3,7 +3,7 @@
 
 #include <string>
 #include <functional>
-#include <vector>
+//#include <vector>
 
 #include "snake.h"
 #include "map.h"
@@ -22,6 +22,7 @@ public:
 	//std::vector<Snake> sCells;
 	Map* map{ nullptr };
 	Apple* apple{ nullptr };
+	//std::vector<Snake*> sCells{ nullptr };
 
 	void update();
 	void inputCheck(Direction& dir);
