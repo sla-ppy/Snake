@@ -1,181 +1,185 @@
+#include <Windows.h>
 #include <iostream>
 #include <thread>
-#include <Windows.h>
 #include <vector>
 
-#include "map.h"
 #include "game.h"
+#include "map.h"
 #include "snake.h"
 
 void Game::inputCheck(Direction& dir) {
-	if (GetAsyncKeyState(VK_UP)) {
-		dir = Direction::UP;
-	}
-	else if (GetAsyncKeyState(VK_DOWN)) {
-		dir = Direction::DOWN;
-	}
-	else if (GetAsyncKeyState(VK_LEFT)) {
-		dir = Direction::LEFT;
-	}
-	else if (GetAsyncKeyState(VK_RIGHT)) {
-		dir = Direction::RIGHT;
-	}
-	else {
-		dir = dir; // dir stays the same
-	}
+    if (GetAsyncKeyState(VK_UP)) {
+        dir = Direction::UP;
+    } else if (GetAsyncKeyState(VK_DOWN)) {
+        dir = Direction::DOWN;
+    } else if (GetAsyncKeyState(VK_LEFT)) {
+        dir = Direction::LEFT;
+    } else if (GetAsyncKeyState(VK_RIGHT)) {
+        dir = Direction::RIGHT;
+    } else {
+        dir = dir; // dir stays the same
+    }
 }
 
 void Game::doMovement(Direction& dir) {
-	// actual movement
-	switch (dir) {
-	case Direction::UP:
-		sHead->pos_x--;
-		//sHead->prev_pos_x = sHead->pos_x++;
-		break;
-	case Direction::DOWN:
-		sHead->pos_x++;
-		//sHead->prev_pos_x = sHead->pos_x--;
-		break;
-	case Direction::LEFT:
-		sHead->pos_y--;
-		//sHead->prev_pos_y = sHead->pos_y++;
-		break;
-	case Direction::RIGHT:
-		sHead->pos_y++;
-		//sHead->prev_pos_y = sHead->pos_y--;
-		break;
-	}
+    // actual movement
+    switch (dir) {
+    case Direction::UP:
+        sHead->pos_x--;
+        break;
+    case Direction::DOWN:
+        sHead->pos_x++;
+        break;
+    case Direction::LEFT:
+        sHead->pos_y--;
+        break;
+    case Direction::RIGHT:
+        sHead->pos_y++;
+        break;
+    }
 }
 
 // overloading "<<" to be able to print custom type
 std::wostream& operator<<(std::wostream& os, const Snake& snake) {
-	return os << "[Snake]"
-		<< std::endl
-		<< "pos_x:"
-		<< snake.pos_x
-		<< " "
-		<< "prev_pos_x:"
-		<< snake.prev_pos_x
-		<< " " << "pos_y:"
-		<< snake.pos_y
-		<< " "
-		<< "prev_pos_y:"
-		<< snake.prev_pos_y;
+    return os << "[Snake]"
+              << std::endl
+              << "pos_x:"
+              << snake.pos_x
+              << " "
+              << "prev_pos_x:"
+              << snake.prev_pos_x
+              << " "
+              << "pos_y:"
+              << snake.pos_y
+              << " "
+              << "prev_pos_y:"
+              << snake.prev_pos_y;
 }
 
 Game::Game() {
-	map = new Map;
-	sHead = new Snake;
-	apple = new Apple;
+    map = new Map;
+    sHead = new Snake;
+    apple = new Apple;
 
-	// INIT SNAKE:
-	sHead->pos_x = map->width / 2;
-	sHead->pos_y = map->height / 2;
+    // INIT SNAKE:
+    sHead->pos_x = map->width / 2;
+    sHead->pos_y = map->height / 2;
 
-	// RENDER SNAKE:
-	map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+    // RENDER SNAKE:
+    map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+    map->m_boardArray[sHead->prev_pos_x][sHead->prev_pos_y] = '#';
 
-	// INIT APPLE:
-	bool appleSpawned = false;
+    // INIT APPLE:
+    bool appleSpawned = false;
 
-	while (appleSpawned == false) {
-		apple->genApplePos();
+    while (appleSpawned == false) {
+        apple->genApplePos();
 
-		if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
-			map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
-			appleSpawned = true;
-		}
-	}
+        if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+            map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+            appleSpawned = true;
+        }
+    }
 }
 
 void Game::update() {
-	Direction dir = Direction::NOTMOVING;
+    Direction dir = Direction::NOTMOVING;
 
-	while (true)
-	{
-		// DOUBLE BUFFER:
-		std::wstring buffer;
+    // init position for "whole snake"
+    sHead->prev_pos_x = sHead->pos_x + 1;
+    sHead->prev_pos_y = sHead->pos_y;
 
-		// LIMIT FRAMERATE:
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while (true) {
+        // DOUBLE BUFFER:
+        std::wstring buffer;
 
-		// sets cursor position back to the "home" position
-		std::wcout << "\x1b[H" << std::flush;
+        // LIMIT FRAMERATE:
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-		// illusion of movement 1/2
-		map->m_boardArray[sHead->pos_x][sHead->pos_y] = '.';
+        // sets cursor position back to the "home" position
+        std::wcout << "\x1b[H" << std::flush;
 
-		// MOVEMENT:
-		inputCheck(dir);
-		doMovement(dir);
+        // illusion of movement 1/2
+        map->m_boardArray[sHead->pos_x][sHead->pos_y] = '.';
+        map->m_boardArray[sHead->prev_pos_x][sHead->prev_pos_y] = '.';
 
-		// getting previous movement values
-		// TODO: put this in a loop, and prev_pos values always take the current node's values, hence movement happens.
-		if (dir == Direction::UP) {
-			sHead->prev_pos_x = sHead->pos_x - 1;
-		}
-		if (dir == Direction::DOWN) {
-			sHead->prev_pos_x = sHead->pos_x - 1;
-		}
-		if (dir == Direction::LEFT) {
-			sHead->prev_pos_y = sHead->pos_y + 1;
-		}
-		if (dir == Direction::RIGHT) {
-			sHead->prev_pos_y = sHead->pos_y - 1;
-		}
+        // MOVEMENT:
+        inputCheck(dir);
+        doMovement(dir);
 
-		//FIXME: still doesn't display last value perfectly
-		std::wcout << "\x1b[K";
-		std::wcout << *sHead << std::endl;
+        
+        // getting previous movement values
+        // TODO: put this in a loop, and prev_pos values always take the current node's values, hence movement happens.
+        if (dir == Direction::UP) {
+            sHead->prev_pos_x = sHead->pos_x + 1;
+            sHead->prev_pos_y = sHead->pos_y;
+        }
+        if (dir == Direction::DOWN) {
+            sHead->prev_pos_x = sHead->pos_x - 1;
+            sHead->prev_pos_y = sHead->pos_y;
+        }
+        if (dir == Direction::LEFT) {
+            sHead->prev_pos_y = sHead->pos_y + 1;
+            sHead->prev_pos_x = sHead->pos_x;
+        }
+        if (dir == Direction::RIGHT) {
+            sHead->prev_pos_y = sHead->pos_y - 1;
+            sHead->prev_pos_x = sHead->pos_x;
+        }
 
-		// WALL COLLISION:
-		if (sHead->pos_x <= 0
-			|| sHead->pos_y <= 0
-			|| sHead->pos_x >= (map->width - 1)
-			|| sHead->pos_y >= (map->height - 1)) {
-			break;
-		}
+        //FIXME: still doesn't display last value perfectly
 
-		// vector that contains snake objects
-		std::vector<Snake> sCells;
+        std::wcout << *sHead << std::endl;
 
-		// APPLE COLLISION:
-		if (sHead->pos_x == apple->randPosX && sHead->pos_y == apple->randPosY) {
-			std::wcout << "Apple hit.";
-			map->m_boardArray[apple->randPosX][apple->randPosY] = '.';
+        // WALL COLLISION:
+        if (sHead->pos_x <= 0
+            || sHead->pos_y <= 0
+            || sHead->pos_x >= (map->width - 1)
+            || sHead->pos_y >= (map->height - 1)) {
+            break;
+        }
 
-			bool appleSpawned = false;
+        // vector that contains snake objects
+        std::vector<Snake> V_SNAKECELLS;
+        std::vector<Snake> sCells;
 
-			while (appleSpawned == false) {
-				apple->genApplePos();
+        // APPLE COLLISION:
+        if (sHead->pos_x == apple->randPosX && sHead->pos_y == apple->randPosY) {
+            std::wcout << "Apple hit.";
+            map->m_boardArray[apple->randPosX][apple->randPosY] = '.';
 
-				if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
-					map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
-					appleSpawned = true;
-				}
-			}
-		}
+            bool appleSpawned = false;
 
-		// when collision happens
-		// push back 1 snake obj on "stack"
-		sCells.push_back(Snake{});
+            while (appleSpawned == false) {
+                apple->genApplePos();
 
-		std::wcout << std::endl;
-		for (const auto& snake: sCells) {
-			std::wcout << snake.pos_x << std::endl;
-			std::wcout << snake.pos_y << std::endl;
-			std::wcout << snake.prev_pos_x << std::endl;
-			std::wcout << snake.prev_pos_y << std::endl;
-		}
+                if (map->m_boardArray[apple->randPosX][apple->randPosY] == '.') {
+                    map->m_boardArray[apple->randPosX][apple->randPosY] = 'O';
+                    appleSpawned = true;
+                }
+            }
+        }
 
-		// how many objects
-		// score = snake length
-		sCells.size();
+        // when collision happens
+        // push back 1 snake obj on "stack"
+        sCells.push_back(Snake {});
 
-		// needed for resizing
-		//sCells.reserve(vectorSize);
+        std::wcout << std::endl;
+        for (const auto& snake : sCells) {
+            std::wcout << snake.pos_x << std::endl;
+            std::wcout << snake.pos_y << std::endl;
+            std::wcout << snake.prev_pos_x << std::endl;
+            std::wcout << snake.prev_pos_y << std::endl;
+        }
 
-		/*
+        // how many objectsac
+        // score = snake length
+        sCells.size();
+
+        // needed for resizing
+        //sCells.reserve(vectorSize);
+
+        /*
 		TODO:
 		I. snake body:
 			1. sCells[i]++ when apple is hit
@@ -185,31 +189,32 @@ void Game::update() {
 		II. check if needed: movement reversing issue
 		*/
 
-		// illusion of movement 2/2
-		// render position of new 'X'
-		map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+        // illusion of movement 2/2
+        // render position of new 'X'
+        map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
+        map->m_boardArray[sHead->prev_pos_x][sHead->prev_pos_y] = '#';
 
-		// update game map
-		for (int x = 0; x < map->width; x++) {
-			buffer += '\n';
-			for (int y = 0; y < map->height; y++) {
-				buffer += map->m_boardArray[x][y];
-			}
-		}
-		std::wcout << buffer;
-	}
+        // update game map
+        for (int x = 0; x < map->width; x++) {
+            buffer += '\n';
+            for (int y = 0; y < map->height; y++) {
+                buffer += map->m_boardArray[x][y];
+            }
+        }
+        std::wcout << buffer;
+    }
 
-	std::wcout << "You've died." << std::endl;
+    std::wcout << "You've died." << std::endl;
 
-	// just so the error message doesn't ruin our map after game over
-	for (int i = 0; i < 25; i++) {
-		std::wcout << "\n";
-	}
+    // just so the error message doesn't ruin our map after game over
+    for (int i = 0; i < 25; i++) {
+        std::wcout << "\n";
+    }
 }
 
 Game::~Game() {
-	delete map;
-	delete sHead;
-	delete apple;
-	// destroy vector here. destroying vector means we also destroy objects
+    delete map;
+    delete sHead;
+    delete apple;
+    // destroy vector here. destroying vector means we also destroy objects
 }

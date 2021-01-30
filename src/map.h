@@ -2,21 +2,21 @@
 #define MAP_H
 
 struct Map {
-	static const int width = 20; //3;
-	static const int height = 40; //3;
-	wchar_t m_boardArray[width][height];
+    static const int width = 22; //3;
+    static const int height = 42; //3;
+    wchar_t m_boardArray[width][height];
 
-	Map();
+    Map();
 };
 
 struct Apple {
-	int randPosX{ 0 };
-	int randPosY{ 0 };
+    int randPosX { 0 };
+    int randPosY { 0 };
 
-	wchar_t apple;
+    wchar_t apple;
 
-	Apple();
+    Apple();
 
-	void genApplePos();
+    void genApplePos();
 };
 #endif // !MAP_H

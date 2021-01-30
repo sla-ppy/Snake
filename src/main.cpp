@@ -1,34 +1,33 @@
-﻿#include <iostream>
-#include <io.h> // _setmode
+﻿#include <Windows.h>
 #include <fcntl.h> // _O_U16TEXT
+#include <io.h> // _setmode
+#include <iostream>
 #include <tchar.h> // _TCHAR*
-#include <Windows.h>
 
 #include "game.h"
 
 // StackOverFlow: basically hides the console cursor
-void ShowConsoleCursor(bool showFlag)
-{
-	HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
+void ShowConsoleCursor(bool showFlag) {
+    HANDLE out = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	CONSOLE_CURSOR_INFO cursorInfo;
+    CONSOLE_CURSOR_INFO cursorInfo;
 
-	GetConsoleCursorInfo(out, &cursorInfo);
-	cursorInfo.bVisible = showFlag; // set the cursor visibility
-	SetConsoleCursorInfo(out, &cursorInfo);
+    GetConsoleCursorInfo(out, &cursorInfo);
+    cursorInfo.bVisible = showFlag; // set the cursor visibility
+    SetConsoleCursorInfo(out, &cursorInfo);
 }
 
 int main() {
-	// needed for unicode chars
-	_setmode(_fileno(stdout), _O_U8TEXT);
+    // needed for unicode chars
+    _setmode(_fileno(stdout), _O_U8TEXT);
 
-	Game* game = new Game;
+    Game* game = new Game;
 
-	ShowConsoleCursor(false);
+    ShowConsoleCursor(false);
 
-	game->update();
+    game->update();
 
-	delete game;
+    delete game;
 
-	return 0;
+    return 0;
 }
