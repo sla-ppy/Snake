@@ -3,7 +3,6 @@
 
 #include <functional>
 #include <string>
-//#include <vector>
 
 #include "map.h"
 #include "snake.h"
@@ -19,10 +18,8 @@ enum class Direction {
 class Game {
 public:
     Snake* sHead { nullptr };
-    //std::vector<Snake> sCells;
     Map* map { nullptr };
     Apple* apple { nullptr };
-    //std::vector<Snake*> sCells{ nullptr };
 
     void update();
     void inputCheck(Direction& dir);

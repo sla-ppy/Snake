@@ -40,21 +40,21 @@ void Game::doMovement(Direction& dir) {
 }
 
 // overloading "<<" to be able to print custom type
-std::wostream& operator<<(std::wostream& os, const Snake& snake) {
-    return os << "[Snake]"
-              << std::endl
-              << "pos_x:"
-              << snake.pos_x
-              << " "
-              << "prev_pos_x:"
-              << snake.prev_pos_x
-              << " "
-              << "pos_y:"
-              << snake.pos_y
-              << " "
-              << "prev_pos_y:"
-              << snake.prev_pos_y;
-}
+//std::wostream& operator<<(std::wostream& os, const Snake& snake) {
+//    return os << "[Snake]"
+//              << std::endl
+//              << "pos_x:"
+//              << snake.pos_x
+//              << " "
+//              << "prev_pos_x:"
+//              << snake.prev_pos_x
+//              << " "
+//              << "pos_y:"
+//              << snake.pos_y
+//              << " "
+//              << "prev_pos_y:"
+//              << snake.prev_pos_y;
+//}
 
 Game::Game() {
     map = new Map;
@@ -67,7 +67,6 @@ Game::Game() {
 
     // RENDER SNAKE:
     map->m_boardArray[sHead->pos_x][sHead->pos_y] = 'X';
-    map->m_boardArray[sHead->prev_pos_x][sHead->prev_pos_y] = '#';
 
     // INIT APPLE:
     bool appleSpawned = false;
@@ -128,8 +127,7 @@ void Game::update() {
         }
 
         //FIXME: still doesn't display last value perfectly
-
-        std::wcout << *sHead << std::endl;
+        //std::wcout << *sHead << std::endl;
 
         // WALL COLLISION:
         if (sHead->pos_x <= 0
@@ -164,15 +162,13 @@ void Game::update() {
         // push back 1 snake obj on "stack"
         sCells.push_back(Snake {});
 
-        std::wcout << std::endl;
-        for (const auto& snake : sCells) {
+        /*for (const auto& snake : sCells) {
             std::wcout << snake.pos_x << std::endl;
             std::wcout << snake.pos_y << std::endl;
             std::wcout << snake.prev_pos_x << std::endl;
             std::wcout << snake.prev_pos_y << std::endl;
-        }
+        }*/
 
-        // how many objectsac
         // score = snake length
         sCells.size();
 
