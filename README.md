@@ -1,11 +1,26 @@
-# Snake From Scratch
 
-Snake proved to be the perfect entry-point beginner project that I was looking for. Hands down, I recommend this project to start with to anyone interested in C++, or game development. You will learn the basics of what are needed to make a game work, and possibly much more.
+# Project: Snake From Scratch
+> Snake proved to be the perfect entry-point beginner project that I was looking for. Hands down, I recommend this project to start with to anyone interested in C++, or game development. You will learn the basics of what are needed to make a game work, and possibly much more.
 
 ## What I have learned from this project:
-* Stuff 1
-* Stuff 2
-* Stuff 3
+<details>
+  <summary></summary>
+  
+* Basic game loop
+* Making a module from the game's subsystem:
+  * Game map module
+* Rendering / Displaying an array:
+  * Using the Extended ANSII table
+  * Using UNICODE chars for the console
+  * Simple double buffering
+  * Simple framerate limit
+* Basic movement:
+  * Input checking
+  * Snake movement
+* Collision:
+  * Game map collision
+  * Apple collision
+</details>
 
 ### Spoiler Warning:
 > If you plan on solving Snake with C++ yourself, consider not checking my theory and solution so you can ponder it about yourself. The section below contains my, and my friend's approach, and ultimately the solution. You've been warned.
@@ -26,9 +41,6 @@ Insert picture here!
 
 </details>
 
-### Rendering:
-Started with using the Extended ANSII table.<br>
-Switched to UNICODE characters.<br>
 
 Using the following characters for displaying the game map:
 https://en.wikipedia.org/wiki/Box-drawing_character
