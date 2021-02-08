@@ -30,24 +30,28 @@
    
 ### S4kyt's version 1:
 
-![alt text](https://github.com/S4kyt/Snake/blob/master/proj/var_01.jpg?raw=true)
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v1.jpg?raw=true)
 
 ### S4kyt's version 2:
 
-![alt text](https://github.com/S4kyt/Snake/blob/master/proj/var_02.jpg?raw=true)
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v2.jpg?raw=true)
+
+### S4kyt's version 3:
+
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v3.jpg?raw=true)
 
 ### Lion's version:
-Insert picture here!
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/lionkor_theory.jpg?raw=true)
 
 </details>
 
 
 ## Rendering history:
-1. I've started to render the map array using basic special characters which is included in the ANSII character table displayed on "Rendering V1 and Rendering V2".<br>
+1. I've started to render the map array using basic special characters which is included in the ANSII character table.
 
-2. Since I didn't like the looks of it, I've switched to the Extended ANSII table.<br>
+2. Since I didn't like the looks of it, I've switched to the Extended ANSII table. The method is displayed on "Rendering V1".<br>
 
-3. In the end I've decided to take the harder option and switch to using UNICODE characters, which I've solved by changing the console output's mode to be able to use UNICODE characters. As displayed on "Rendering V3".<br>
+3. In the end I've decided to take the harder option and switch to using UNICODE characters, which I've solved by changing the console output's mode to be able to use UNICODE characters. As displayed on "Rendering V2".<br>
 Using the following characters for displaying the game map:<br>
 https://en.wikipedia.org/wiki/Box-drawing_character
 
@@ -56,9 +60,9 @@ https://en.wikipedia.org/wiki/Box-drawing_character
 <summary> Rendering V1-V3: </summary>
   
 1. Rendering V1
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v1.jpg?raw=true)
 
 2. Rendering V2
-
-3. Rendering V3 and Final
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v2.jpg?raw=true)
 
 </details>
