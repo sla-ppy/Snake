@@ -17,9 +17,8 @@ enum class Direction {
 
 class Game {
 public:
-    Snake* sHead { nullptr };
-    Map* map { nullptr };
-    Apple* apple { nullptr };
+    Map map;    
+    Apple apple;
 
     void update();
     void inputCheck(Direction& dir);
@@ -27,7 +26,6 @@ public:
 
     Game();
     Game(const Game&) = delete;
-    ~Game();
 };
 
 #endif // GAME_H

@@ -21,13 +21,11 @@ int main() {
     // needed for unicode chars
     _setmode(_fileno(stdout), _O_U8TEXT);
 
-    Game* game = new Game;
+    Game game;
 
     ShowConsoleCursor(false);
 
-    game->update();
-
-    delete game;
+    game.update();
 
     return 0;
 }
