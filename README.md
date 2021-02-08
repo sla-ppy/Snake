@@ -41,7 +41,9 @@
 ![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v3.jpg?raw=true)
 
 ### Lion's version:
-![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/lionkor_theory.jpg?raw=true)
+
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/lionkor_theory.JPG?raw=true)
+
 
 </details>
 
@@ -57,12 +59,14 @@ https://en.wikipedia.org/wiki/Box-drawing_character
 
 
 <details>
-<summary> Rendering V1-V3: </summary>
+<summary> Game map rendering V1-V2: </summary>
   
-1. Rendering V1
-![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v1.jpg?raw=true)
+1. Game map rendering V1:
 
-2. Rendering V2
-![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v2.jpg?raw=true)
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v1.png?raw=true)
+
+2. Game map rendering V2:
+
+![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v2.png?raw=true)
 
 </details>
