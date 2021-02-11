@@ -1,5 +1,7 @@
 #include <Windows.h>
 #include <iostream>
+#include <mmsystem.h>
+#include <random>
 #include <thread>
 #include <vector>
 
@@ -22,6 +24,8 @@ void Game::inputCheck(Direction& dir) {
 }
 
 Game::Game() {
+    // POLISH: main menu
+
     // INIT APPLE:
     bool appleSpawned = false;
 
@@ -41,7 +45,9 @@ void Game::update() {
     // vector that contains snake objects
     std::vector<Snake> snake;
 
+    // INIT SNAKE:
     snake.push_back({ map.width / 2, map.height / 2 });
+    snake.push_back({ map.width / 2, map.height / 2 + 1 });
     snake.push_back({ map.width / 2, map.height / 2 + 1 });
 
     size_t game_score { 0 };
@@ -51,10 +57,13 @@ void Game::update() {
         std::wstring buffer;
 
         // LIMIT FRAMERATE:
+        // POLISH: speed settings 1-3
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
         // SET CURSOR TO HOME:
         std::wcout << "\x1b[H" << std::flush;
+
+        PlaySound(TEXT("sfx/move_sound.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
         // ILLUSION OF MOVEMENT 1/2:
         for (const Snake& part : snake) {
@@ -78,42 +87,38 @@ void Game::update() {
         if (dir == Direction::RIGHT) {
             snake_head = Snake(snake.front().pos_x, snake.front().pos_y + 1);
         }
+
         snake.insert(snake.begin(), snake_head);
+
+        // SNAKE COLLISION:
+        // taken from javidx9's snake from scratch video
+        for (std::vector<Snake>::iterator it = snake.begin(); it != snake.end(); it++) {
+            if (it != snake.begin() && it->pos_x == snake.front().pos_x && it->pos_y == snake.front().pos_y) {
+                PlaySound(TEXT("sfx/snake_hit.wav"), NULL, SND_FILENAME);
+
+                // just so the error message doesn't ruin our map after game over
+                for (int i = 0; i < 22; i++) {
+                    std::wcout << "\n";
+                }
+                std::wcout << "The snek bit its tail! :(" << std::endl;
+                PlaySound(TEXT("sfx/game_over.wav"), NULL, SND_FILENAME);
+                return;
+            }
+        }
 
         // WALL COLLISION:
         if (snake_head.pos_x <= 0
             || snake_head.pos_y <= 0
             || snake_head.pos_x >= (map.width - 1)
             || snake_head.pos_y >= (map.height - 1)) {
+            PlaySound(TEXT("sfx/wall_hit.wav"), NULL, SND_FILENAME);
             break;
-        }
-
-        if (map.m_boardArray[snake_head.pos_x][snake_head.pos_y] == '#') {
-            return;
         }
 
         // APPLE COLLISION:
         if (snake_head.pos_x == apple.randPosX && snake_head.pos_y == apple.randPosY) {
-
-            int randNumber { 0 };
-
-            // FIXME: SFX here, relocate to sfx.h later on
-            if (randNumber == 1) {
-                PlaySound(TEXT("sfx/apple_pickup1.wav"), NULL, SND_SYNC);
-            }
-            if (randNumber == 2) {
-                PlaySound(TEXT("sfx/apple_pickup2.wav"), NULL, SND_SYNC);
-            }
-            if (randNumber == 3) {
-                PlaySound(TEXT("sfx/apple_pickup3.wav"), NULL, SND_SYNC);
-            }
-            if (randNumber == 4) {
-                PlaySound(TEXT("sfx/apple_pickup4.wav"), NULL, SND_SYNC);
-            }
-            if (randNumber == 5) {
-                PlaySound(TEXT("sfx/apple_pickup5.wav"), NULL, SND_SYNC);
-            }
             map.m_boardArray[apple.randPosX][apple.randPosY] = '.';
+            PlaySound(TEXT("sfx/apple_pickup.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
             bool appleSpawned = false;
 
@@ -126,6 +131,7 @@ void Game::update() {
                 }
             }
         } else {
+            // if we dont encounter an apple, we keep the same size, hence movement.
             snake.erase(snake.end() - 1);
         }
 
@@ -135,9 +141,10 @@ void Game::update() {
         }
 
         // SCORE:
+        // POLISH: highscores
         game_score = snake.size();
 
-        std::wcout << "Score: " << game_score - 2;
+        std::wcout << "Score: " << game_score - 3;
 
         // ILLUSION OF MOVEMENT 2/2:
         map.m_boardArray[snake_head.pos_x][snake_head.pos_y] = 'X';
@@ -152,15 +159,12 @@ void Game::update() {
         std::wcout << buffer;
     }
     std::wcout << "Game over. "
-               << "Your final score: " << game_score - 2 << std::endl;
+               << "Your final score: " << game_score - 3 << std::endl;
 
-    // CLEARSCREEN AFTER GAME
-    //void clearScreen() {
-    //   
-    //}
+    PlaySound(TEXT("sfx/game_over.wav"), NULL, SND_FILENAME);
 
     // just so the error message doesn't ruin our map after game over
-    for (int i = 0; i < 22; i++) {
+    for (int i = 0; i < 20; i++) {
         std::wcout << "\n";
     }
 }
