@@ -22,7 +22,6 @@ public:
 
     void update();
     void inputCheck(Direction& dir);
-    void doMovement(Direction& dir);
 
     Game();
     Game(const Game&) = delete;

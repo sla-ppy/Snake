@@ -40,6 +40,8 @@ Game::Game() {
 }
 
 void Game::update() {
+    // POLISH: figure out a way to use Direction::NOTMOVING
+    // issue is that since snake_head isn't initialized the wall collision happens instantly, so the game has no chance to be played
     Direction dir = Direction::UP;
 
     // vector that contains snake objects
@@ -63,6 +65,8 @@ void Game::update() {
         // SET CURSOR TO HOME:
         std::wcout << "\x1b[H" << std::flush;
 
+        // POLISH: figure out a way to play sfx another way
+        // reason being is because PlaySound has serious performance impacts as of currently
         PlaySound(TEXT("sfx/move_sound.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
         // ILLUSION OF MOVEMENT 1/2:
@@ -70,10 +74,10 @@ void Game::update() {
             map.m_boardArray[part.pos_x][part.pos_y] = '.';
         }
 
-        Snake snake_head;
-
         // MOVEMENT:
         inputCheck(dir);
+
+        Snake snake_head;
 
         if (dir == Direction::UP) {
             snake_head = Snake(snake.front().pos_x - 1, snake.front().pos_y);
@@ -96,8 +100,11 @@ void Game::update() {
             if (it != snake.begin() && it->pos_x == snake.front().pos_x && it->pos_y == snake.front().pos_y) {
                 PlaySound(TEXT("sfx/snake_hit.wav"), NULL, SND_FILENAME);
 
+                std::wcout << "Game over. "
+                           << "Your final score: " << game_score - 3 << std::endl;
+
                 // just so the error message doesn't ruin our map after game over
-                for (int i = 0; i < 22; i++) {
+                for (int i = 0; i < 21; i++) {
                     std::wcout << "\n";
                 }
                 std::wcout << "The snek bit its tail! :(" << std::endl;
