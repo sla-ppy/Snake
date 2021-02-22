@@ -70,3 +70,22 @@ https://en.wikipedia.org/wiki/Box-drawing_character
 ![alt text](https://github.com/S4kyt/Snake/blob/master/proj/rendering_v2.png?raw=true)
 
 </details>
+
+## Polishing the project:
+I will possibly make a new branch for implementing future changes to the code if it would alter the implementation too much.
+Here is a small list of what else I thought about adding so far:
+1. Main menu:
+  * Speed settings
+  * Difficulty settings
+  * Mode settings: No Walls, No Collision
+2. High scores (Player Profiles?)
+3. New implementation for handling sfx since PlaySound causes serious performance issues
+
+## SFX:
+I've wanted to include some sound effects, which are currently done by using PlaySound. Its close to being a terrible solution at the moment, so I'd recommend staying away from it!
+
+I used the following tool to generate sfx for my project:
+https://www.bfxr.net/
+
+Would like to recommend it if you are in need for some effects to include in your game!
+Also a pretty decent project idea for future if you are in lack of those!
