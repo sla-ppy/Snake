@@ -28,15 +28,15 @@
 <details>
 <summary>Solutions, theory crafting: </summary>
    
-### S4kyt's version 1:
+### sla-ppy/S4kyt's version 1:
 
 ![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v1.jpg?raw=true)
 
-### S4kyt's version 2:
+### sla-ppy/S4kyt's version 2:
 
 ![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v2.jpg?raw=true)
 
-### S4kyt's version 3:
+### sla-ppy/S4kyt's version 3:
 
 ![alt text](https://github.com/S4kyt/Snake/blob/master/proj/theory/s4kyt_theory_v3.jpg?raw=true)
 
