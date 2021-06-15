@@ -3,8 +3,8 @@
 > Snake proved to be the perfect entry-point beginner project that I was looking for. Hands down, I recommend this project to start with to anyone interested in C++, or game development. You will learn the basics of what are needed to make a game work, and possibly much more.
 
 ## Contents:
-<a href="https://github.com/sla-ppy/Snake/edit/master/README.md#What I have learned from this project:"> What I have learned from this project:</a>
-<a href="https://github.com/sla-ppy/Snake/edit/master/README.md#Spoiler Warning:">Spoiler Warning:</a>
+<a href="#What I have learned from this project:"> What I have learned from this project:</a>
+<a href="#Spoiler Warning:">Spoiler Warning:</a>
 
 ### What I have learned from this project:
 <details>
