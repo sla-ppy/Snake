@@ -2,11 +2,6 @@
 # Project: Snake From Scratch
 > Snake proved to be the perfect entry-point beginner project that I was looking for. Hands down, I recommend this project to start with to anyone interested in C++, or game development. You will learn the basics of what are needed to make a game work, and possibly much more.
 
-# Contents
- - [sfx](#sfx)
-
-
-
 ### What I have learned from this project:
 <details>
   <summary></summary>
